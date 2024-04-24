@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "460263803348",
+    "project_id": "foodandart-d0115",
+    "storage_bucket": "foodandart-d0115.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:460263803348:android:22986314b024fd3cb86e41",
+        "android_client_info": {
+          "package_name": "com.example.foodandart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu_UqMLatRXE8pJSWNAC5bGQIN1m4Beeo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

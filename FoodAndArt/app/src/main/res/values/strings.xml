@@ -1,0 +1,43 @@
+<resources>
+
+    <string name="app_name">FoodAndArt</string>
+    <string name="authenticate">Authenticate</string>
+
+    <!-- App Theme -->
+        <string name="theme_light">Light</string>
+        <string name="theme_dark">Dark</string>
+        <string name="theme_system">System</string>
+
+    <!-- Login and Log out -->
+
+        <string name="email">Email</string>
+        <string name="password">Password</string>
+        <string name="cancel">Cancel</string>
+        <string name="empty_email">The mail is empty</string>
+        <string name="empty_password">The password is empty</string>
+
+        <!-- Sign Up  -->
+            <string name="sign_up">Sign up</string>
+            <string name="emailAlreadyUsed">This Email is already in use</string>
+            <string name="confirmPasswordWrong">Passwords do not match</string>
+            <string name="passwordTooShort"> Password should be at least 6 characters</string>
+            <string name="confirm_password">Confirm password</string>
+
+        <!-- Sign In -->
+            <string name="sign_in">Sign in</string>
+            <string name="sign_up_description">Don\'t have an account? Click here to Sign Up!</string>
+            <string name="email_badly_formatted">The email address is badly formatted </string>
+            <string name="wrong_fields">Password or email are wrong</string>
+
+        <!-- Sign Out -->
+            <string name="sign_out">Sign out</string>
+            <string name="sign_out_title">Sign out?</string>
+            <string name="sign_out_description">You will have to sign in again to see your notes.</string>
+
+        <!-- Delete Account -->
+            <string name="delete_account">Delete account</string>
+            <string name="delete_account_title">Delete account?</string>
+            <string name="delete_account_description">You will lose all your notes and your account will be deleted. This action is irreversible.</string>
+
+
+</resources>
