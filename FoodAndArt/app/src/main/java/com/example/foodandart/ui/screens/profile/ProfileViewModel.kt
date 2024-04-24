@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.foodandart.data.models.Theme
 import com.example.foodandart.data.repositories.ThemeRepository
 import com.example.foodandart.service.AccountService
@@ -30,10 +31,15 @@ class ProfileViewModel(
         repository.setTheme(theme)
     }
 
-    fun initialize(restartApp: (String) -> Unit) {
+    fun initialize(navController: NavController) {
         viewModelScope.launch {
             accountService.currentUser.collect { user ->
-                if (user == null) restartApp(FoodAndArtRoute.Splash.route)
+                if (user == null) {
+                    navController.navigate(FoodAndArtRoute.Splash.route) {
+                        launchSingleTop = true
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             }
         }
     }
@@ -49,6 +55,4 @@ class ProfileViewModel(
             accountService.deleteAccount()
         }
     }
-
-
 }
