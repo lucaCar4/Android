@@ -3,6 +3,7 @@ package com.example.foodandart
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.foodandart.data.repositories.HomeChipsRepositories
+import com.example.foodandart.data.repositories.ThemeRepository
 import com.example.foodandart.service.AccountService
 import com.example.foodandart.ui.screens.home.HomeViewModel
 import com.example.foodandart.ui.screens.login.sign_in.SignInViewModel
@@ -13,7 +14,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 val accountService = AccountService()
 val Context.dataStore by preferencesDataStore("chips")
-val Context.themeStore by preferencesDataStore("museums")
+val Context.themeStore by preferencesDataStore("themes")
 
 val appModule = module {
     // DataStore
@@ -21,6 +22,7 @@ val appModule = module {
     single { get<Context>().themeStore }
     //Repository
     single { HomeChipsRepositories(get()) }
+    single { ThemeRepository(get()) }
     // ViewModel
     viewModel{ HomeViewModel(get()) }
 
