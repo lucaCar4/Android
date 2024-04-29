@@ -22,8 +22,14 @@
             <string name="confirmPasswordWrong">Passwords do not match</string>
             <string name="passwordTooShort"> Password should be at least 6 characters</string>
             <string name="confirm_password">Confirm password</string>
+            <string name="picture">Take a Picture</string>
+            <string name="name">Name</string>
+            <string name="city">City</string>
+            <string name="error_city">City does not exist</string>
 
-        <!-- Sign In -->
+
+
+    <!-- Sign In -->
             <string name="sign_in">Sign in</string>
             <string name="sign_up_description">Don\'t have an account? Click here to Sign Up!</string>
             <string name="email_badly_formatted">The email address is badly formatted </string>
