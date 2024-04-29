@@ -4,7 +4,8 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.devtools.ksp")
     id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
+
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 android {
@@ -89,10 +90,16 @@ dependencies {
     implementation("com.firebaseui:firebase-ui-storage:7.2.0")
     implementation("io.coil-kt:coil-compose:2.3.0")
     implementation("com.firebaseui:firebase-ui-auth:7.2.0")
+    implementation("com.google.firebase:firebase-appcheck:17.1.0")
 
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-compiler:2.44")
 
-
+    /*HTTP Request*/
+    val ktorVersion = "2.3.8"
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 }
