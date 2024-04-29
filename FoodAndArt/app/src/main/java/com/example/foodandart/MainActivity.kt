@@ -24,7 +24,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.foodandart.data.models.Theme
 import com.example.foodandart.ui.FoodAndArtNavGraph
 import com.example.foodandart.ui.FoodAndArtRoute
-import com.example.foodandart.ui.screens.home.HomeViewModel
 import com.example.foodandart.ui.composable.NavBar
 import com.example.foodandart.ui.screens.profile.ProfileViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -65,7 +64,7 @@ class MainActivity : ComponentActivity() {
                             if(FoodAndArtRoute.mainRoutes.contains(currentRoute)) {
                                 NavBar( navController, currentRoute )
                             }
-                        }
+                        },
                     ) { contentPadding ->
                         FoodAndArtNavGraph(
                             navController,

@@ -11,17 +11,18 @@ import com.example.foodandart.ui.screens.profile.ProfileScreen
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.foodandart.ui.screens.favorites.FavoritesViewModel
 import com.example.foodandart.ui.screens.home.HomeViewModel
 import com.example.foodandart.ui.screens.login.sign_in.SignInScreen
 import com.example.foodandart.ui.screens.login.sign_in.SignInViewModel
 import com.example.foodandart.ui.screens.splash.SplashScreen
 import com.example.foodandart.ui.screens.splash.SplashViewModel
-import com.notes.app.screens.sign_up.SignUpScreen
+import com.example.foodandart.ui.screens.login.sign_up.SignUpScreen
 import com.example.foodandart.ui.screens.login.sign_up.SignUpViewModel
 import com.example.foodandart.ui.screens.profile.ProfileViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -42,7 +43,7 @@ sealed class FoodAndArtRoute(
     data object Favorites : FoodAndArtRoute(
         "Favorites",
         "Favorites",
-        Icons.Outlined.Star,
+        Icons.Outlined.StarBorder,
         listOf(navArgument("travelId") { type = NavType.StringType })
     )
 
@@ -102,7 +103,8 @@ fun FoodAndArtNavGraph(
 
         with(FoodAndArtRoute.Favorites) {
             composable(route) {
-                FavoritesScreen(navController)
+                val favoritesViewModel = koinViewModel<FavoritesViewModel>()
+                FavoritesScreen(navController, favoritesViewModel)
             }
         }
 
