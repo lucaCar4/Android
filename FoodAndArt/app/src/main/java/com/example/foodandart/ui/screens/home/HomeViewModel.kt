@@ -4,11 +4,12 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.foodandart.data.firestore.cloud_database.addRemoveFavoriteCard
 import com.example.foodandart.data.firestore.cloud_database.getCardsWithFilters
+import com.example.foodandart.data.firestore.cloud_database.getFavoritesCardsId
 import com.example.foodandart.data.repositories.HomeChipsRepositories
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import kotlinx.coroutines.flow.first
@@ -27,8 +28,11 @@ class HomeViewModel ( private val repository: HomeChipsRepositories) : ViewModel
 
     var docs = mutableStateListOf<QueryDocumentSnapshot>()
 
+    var favorites = mutableStateListOf<String>()
+
     init {
         viewModelScope.launch {
+            updateFavorites()
             restaurants = repository.restaurants.first()
             museums = repository.museums.first()
             packages = repository.packages.first()
@@ -36,7 +40,18 @@ class HomeViewModel ( private val repository: HomeChipsRepositories) : ViewModel
             updateCards(restaurants, museums, packages, position )
         }
     }
-    suspend fun updateCards(restaurants : String, museums : String, packages : String, position : String) {
+
+    fun updateFavorites() {
+        viewModelScope.launch {
+            favorites.clear()
+            val newFavorites = getFavoritesCardsId()
+            newFavorites.forEach { card ->
+                favorites.add(card)
+            }
+        }
+    }
+
+    private suspend fun updateCards(restaurants : String, museums : String, packages : String, position : String) {
         val querys = getCardsWithFilters(restaurants.toBoolean(), museums.toBoolean(), packages.toBoolean(), position.toBoolean())
         docs.clear()
         querys.forEach { query ->
@@ -75,5 +90,19 @@ class HomeViewModel ( private val repository: HomeChipsRepositories) : ViewModel
     }
 
 
-
+    fun addFavorites(cardId :String) {
+        viewModelScope.launch {
+            val newFavorites = addRemoveFavoriteCard(cardId)
+            favorites.forEach { card ->
+                if(!newFavorites.contains(card))  {
+                    favorites.remove(card)
+                }
+            }
+            newFavorites.forEach { card ->
+                if(!favorites.contains(card))  {
+                    favorites.add(card)
+                }
+            }
+        }
+    }
 }
