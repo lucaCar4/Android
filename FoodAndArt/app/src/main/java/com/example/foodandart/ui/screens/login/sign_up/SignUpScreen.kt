@@ -61,7 +61,6 @@ import com.example.foodandart.R
 import com.example.foodandart.data.remote.OSMDataSource
 import com.example.foodandart.data.remote.OSMPlace
 import com.example.foodandart.ui.screens.login.sign_up.utils.Camera
-import com.example.foodandart.ui.screens.login.sign_up.utils.FindDestination
 import com.example.foodandart.ui.screens.login.sign_up.utils.GetCredentialField
 import com.example.foodandart.ui.screens.login.sign_up.utils.PermissionStatus
 import com.example.foodandart.ui.screens.login.sign_up.utils.UserExtraData
