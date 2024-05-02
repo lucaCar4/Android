@@ -25,9 +25,18 @@ fun NavBar(
         ) {
         FoodAndArtRoute.mainRoutes.forEach{ item ->
             NavigationBarItem(
-                icon = { Icon(item.navIcon, contentDescription = item.title) },
+                icon = { if (item.title == currentRoute.title) {
+                    if (item.navIconSelected != null) {
+                        Icon(item.navIconSelected, contentDescription = item.title)
+                    }
+                }else {
+                    if (item.navIcon != null) {
+                        Icon(item.navIcon, contentDescription = item.title)
+                    }
+                }
+                    },
                 label = { Text(item.title) },
-                selected = item.title == currentRoute.title,
+                selected = false,
                 onClick = {
                     if (item.route != currentRoute.route) {
                         navController.navigate(item.route) {
