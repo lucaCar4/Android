@@ -6,6 +6,7 @@ import com.example.foodandart.data.remote.OSMDataSource
 import com.example.foodandart.data.repositories.HomeChipsRepositories
 import com.example.foodandart.data.repositories.ThemeRepository
 import com.example.foodandart.service.AccountService
+import com.example.foodandart.ui.screens.CardDetails.CardDetailsViewModel
 import com.example.foodandart.ui.screens.favorites.FavoritesViewModel
 import com.example.foodandart.ui.screens.home.HomeViewModel
 import com.example.foodandart.ui.screens.login.sign_in.SignInViewModel
@@ -41,6 +42,8 @@ val appModule = module {
     viewModel{ SplashViewModel(accountService) }
 
     viewModel{ ProfileViewModel(accountService, get()) }
+
+    viewModel { CardDetailsViewModel() }
 
     /*HTTP REQUESTS*/
     single {
