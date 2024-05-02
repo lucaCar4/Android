@@ -9,6 +9,9 @@ import com.example.foodandart.ui.screens.favorites.FavoritesScreen
 import com.example.foodandart.ui.screens.home.HomeScreen
 import com.example.foodandart.ui.screens.profile.ProfileScreen
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.StarBorder
@@ -16,8 +19,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.foodandart.ui.screens.CardDetails.CardDetailsScreen
+import com.example.foodandart.ui.screens.CardDetails.CardDetailsViewModel
 import com.example.foodandart.ui.screens.favorites.FavoritesViewModel
 import com.example.foodandart.ui.screens.home.HomeViewModel
+import com.example.foodandart.ui.screens.home.position.LocationService
 import com.example.foodandart.ui.screens.login.sign_in.SignInScreen
 import com.example.foodandart.ui.screens.login.sign_in.SignInViewModel
 import com.example.foodandart.ui.screens.splash.SplashScreen
@@ -30,50 +36,67 @@ import org.koin.androidx.compose.koinViewModel
 sealed class FoodAndArtRoute(
     val route: String,
     val title: String,
-    val navIcon: ImageVector,
-    val arguments: List<NamedNavArgument> = emptyList()
+    val navIcon: ImageVector?,
+    val navIconSelected: ImageVector?,
+    val arguments: List<NamedNavArgument> = emptyList(),
 ) {
     data object Home : FoodAndArtRoute(
         "Home",
         "Home",
         Icons.Outlined.Home,
-        listOf(navArgument("travelId") { type = NavType.StringType })
+        Icons.Filled.Home,
+        listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
     data object Favorites : FoodAndArtRoute(
         "Favorites",
         "Favorites",
         Icons.Outlined.StarBorder,
-        listOf(navArgument("travelId") { type = NavType.StringType })
+        Icons.Filled.Star,
+        listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
     data object Profile : FoodAndArtRoute(
         "Profile",
         "Profile",
         Icons.Outlined.AccountCircle,
-        listOf(navArgument("travelId") { type = NavType.StringType })
+        Icons.Filled.AccountCircle,
+        listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
     data object SignIn : FoodAndArtRoute(
         "SignIn",
         "SignIn",
-        Icons.Outlined.AccountCircle,
-        listOf(navArgument("travelId") { type = NavType.StringType })
+        null,
+        null,
+        listOf(navArgument("cardId") { type = NavType.StringType })
     )
+
+    data object CardDetails : FoodAndArtRoute(
+        "cards/{cardId}",
+        "CardDetails",
+        null,
+        null,
+        listOf(navArgument("cardId") { type = NavType.StringType })
+    ){
+        fun buildRoute(cardId: String) = "cards/$cardId"
+    }
 
 
     data object SignUp : FoodAndArtRoute(
         "SignUp",
         "SignUp",
-        Icons.Outlined.AccountCircle,
-        listOf(navArgument("travelId") { type = NavType.StringType })
+        null,
+        null,
+        listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
     data object Splash : FoodAndArtRoute(
         "Splash",
         "Splash",
-        Icons.Outlined.AccountCircle,
-        listOf(navArgument("travelId") { type = NavType.StringType })
+        null,
+        null,
+        listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
     companion object {
@@ -86,7 +109,8 @@ sealed class FoodAndArtRoute(
 fun FoodAndArtNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    profileViewModel : ProfileViewModel
+    profileViewModel: ProfileViewModel
+
 ) {
     NavHost(
         navController = navController,
@@ -100,6 +124,8 @@ fun FoodAndArtNavGraph(
                 HomeScreen(navController, homeViewModel)
             }
         }
+
+
 
         with(FoodAndArtRoute.Favorites) {
             composable(route) {
@@ -132,6 +158,13 @@ fun FoodAndArtNavGraph(
             composable(route) {
                 val splashViewModel = koinViewModel<SplashViewModel>()
                 SplashScreen(navController, viewModel = splashViewModel)
+            }
+        }
+
+        with(FoodAndArtRoute.CardDetails) {
+            composable(route, arguments) { backStackEntry ->
+                val cardDetailsViewModel = koinViewModel<CardDetailsViewModel>()
+                CardDetailsScreen(navController ,backStackEntry.arguments?.getString("cardId") ?: "", cardDetailsViewModel)
             }
         }
     }
