@@ -26,17 +26,12 @@ fun getURIFromPath(path: String) : Uri {
     return uriRef
 }
 
-fun updateUserImage(userId : String, image : Uri) {
+suspend fun updateUserImage(userId : String, image : Uri) {
     Log.d("Storage", userId)
     val storage = Firebase.storage
     val storageRef = storage.reference
     val riversRef = storageRef.child("$userId/profile_image.jpg")
-    val uploadTask = riversRef.putFile(image)
-    uploadTask.addOnFailureListener {it ->
-        Log.d("Storage", "Fallito ${it.message ?:""}")
-    }.addOnSuccessListener { taskSnapshot ->
-        Log.d("Storage", "Successo")
-    }
+    riversRef.putFile(image).await()
 }
 
 suspend fun getUserImage(): Uri? {

@@ -67,7 +67,7 @@ fun Cards(vm: FavoritesViewModel) {
     LazyColumn (
         modifier = Modifier.padding(16.dp)
     ) {
-        items(vm.favoritesCard){ document -> FoodAndArtCard(document, vm) }
+        items(vm.favorites){ document -> FoodAndArtCard(document, vm) }
     }
 }
 
@@ -100,9 +100,10 @@ fun FoodAndArtCard(document: DocumentSnapshot, viewModel: FavoritesViewModel) {
                         .crossfade(true)
                         .build(),
                     "Captured image",
-                    contentScale = ContentScale.Fit,
-                    //colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary),
-                    modifier = Modifier.fillMaxWidth()
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .size(200.dp)
                 )
                 val tint by remember { mutableStateOf(Color.Yellow)}
                 IconButton(
