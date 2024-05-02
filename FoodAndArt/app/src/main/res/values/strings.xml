@@ -8,6 +8,11 @@
         <string name="theme_dark">Dark</string>
         <string name="theme_system">System</string>
 
+    <!--Filter chips -->
+        <string name="restaurants">Restaurants</string>
+        <string name="museums">Museums</string>
+        <string name="packages">Packages</string>
+        <string name="position">Position</string>
     <!-- Login and Log out -->
 
         <string name="email">Email</string>
