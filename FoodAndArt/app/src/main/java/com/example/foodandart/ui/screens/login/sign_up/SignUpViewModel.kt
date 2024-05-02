@@ -71,13 +71,16 @@ class SignUpViewModel( private val accountService: AccountService) : ViewModel()
     fun onSignUpClick(navController: NavController) {
         viewModelScope.launch {
             isWrong = password != confirmPassword
-            val result = accountService.signUp(email, password)
-            Log.d("Storage", "$result, ${!isWrong}, ${existDestination}")
-            if (result == "" && !isWrong && existDestination ) {
-                updateUserImage(accountService.currentUserId, image)
-                addUserDocument(name, cityGeoPoint, city)
-                navController.navigate(FoodAndArtRoute.Home.route) {
-                    navController.popBackStack()
+            var result = ""
+            Log.d("Storage", ", ${!isWrong}, ${existDestination}")
+            if (!isWrong && existDestination ) {
+                result = accountService.signUp(email, password)
+                if (result == "") {
+                    updateUserImage(accountService.currentUserId, image)
+                    addUserDocument(name, cityGeoPoint, city)
+                    navController.navigate(FoodAndArtRoute.Home.route) {
+                        navController.popBackStack()
+                    }
                 }
             } else {
                 validate(result)
