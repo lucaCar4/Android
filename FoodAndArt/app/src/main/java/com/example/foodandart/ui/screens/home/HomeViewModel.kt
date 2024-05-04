@@ -51,13 +51,14 @@ class HomeViewModel(private val repository: HomeChipsRepositories) : ViewModel()
             packages = repository.packages.first()
             favoritesChangeListener()
             cardsChangeListener()
+            updateCards()
         }
     }
 
     private var cardsJob: Job? = null
     private var favoritesJob: Job? = null
 
-    fun cardsChangeListener() {
+    private fun cardsChangeListener() {
         cardsJob = CoroutineScope(Dispatchers.IO).launch {
             val db = Firebase.firestore
             val docRef = db.collection("cards")
@@ -79,7 +80,7 @@ class HomeViewModel(private val repository: HomeChipsRepositories) : ViewModel()
         }
     }
 
-    fun favoritesChangeListener() {
+    private fun favoritesChangeListener() {
         favoritesJob = CoroutineScope(Dispatchers.IO).launch {
             val db = Firebase.firestore
             db.collection("users").document(accountService.currentUserId).addSnapshotListener { snapshot, e ->
@@ -101,20 +102,21 @@ class HomeViewModel(private val repository: HomeChipsRepositories) : ViewModel()
         favoritesJob?.cancel()
     }
 
-    suspend fun updateCards() {
+    private suspend fun updateCards() {
         val newDocs: MutableMap<String, Map<String, Object>> = mutableMapOf()
         Log.d("Cards", "Rest $restaurants, Mus $museums, Pack $packages, Pos $position")
         docs.clear()
-        val querys =
-            getCardsWithFilters(restaurants.toBoolean(), museums.toBoolean(), packages.toBoolean())
+        val querys = getCardsWithFilters(restaurants.toBoolean(), museums.toBoolean(), packages.toBoolean())
+        Log.d("Card", "Docs ${querys.size}")
         querys.forEach { query ->
-            query.get()?.addOnSuccessListener { documents ->
+            query.get().addOnSuccessListener { documents ->
                 documents.forEach { document ->
+                    Log.d("Card", "Document ${document.id}")
                     docs[document.id] = document.data as Map<String, Object>
                 }
-            }?.await()
+            }.await()
         }
-        Log.d("Cards", "Docs is ${newDocs}")
+        Log.d("Cards", "Docs is $newDocs")
     }
 
     fun setChip(value: String, name: String) {
@@ -137,7 +139,7 @@ class HomeViewModel(private val repository: HomeChipsRepositories) : ViewModel()
 
     fun showCardByPosition() {
         val removeList = mutableListOf<String>()
-        docs.forEach { key, value ->
+        docs.forEach { (key, value) ->
             val targetCoord = value["coordinates"] as? List<GeoPoint>
             targetCoord?.forEach {
                 val distance = calculateDistance(
@@ -154,7 +156,7 @@ class HomeViewModel(private val repository: HomeChipsRepositories) : ViewModel()
         removeList.forEach { key -> docs.remove(key) }
     }
 
-    fun calculateDistance(
+    private fun calculateDistance(
         myLatitude: Double,
         myLongitude: Double,
         targetLatitude: Double,

@@ -16,11 +16,9 @@ class HomeChipsRepositories (private val dataStore : DataStore<Preferences>) {
         private val POSITION_KEY = stringPreferencesKey("position")
     }
 
-    val restaurants = dataStore.data.map { it[RESTAURANTS_KEY] ?: "" }
-
-    val museums = dataStore.data.map { it[MUSEUMS_KEY] ?: "" }
-    val packages = dataStore.data.map { it[PACKAGES_KEY] ?: "" }
-    val position = dataStore.data.map { it[POSITION_KEY] ?: "" }
+    val restaurants = dataStore.data.map { it[RESTAURANTS_KEY] ?: "false" }
+    val museums = dataStore.data.map { it[MUSEUMS_KEY] ?: "false" }
+    val packages = dataStore.data.map { it[PACKAGES_KEY] ?: "false" }
 
     suspend fun setChip(value : String, name: String) {
         Log.d("Chips", "$name, $value")
@@ -28,7 +26,6 @@ class HomeChipsRepositories (private val dataStore : DataStore<Preferences>) {
             "restaurants" ->  { dataStore.edit { it[RESTAURANTS_KEY] = value }}
             "museums" -> { dataStore.edit { it[MUSEUMS_KEY] = value }}
             "packages" -> { dataStore.edit { it[PACKAGES_KEY] = value }}
-            "position" -> { dataStore.edit { it[POSITION_KEY] = value }}
         }
     }
 }

@@ -19,11 +19,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.example.foodandart.ui.screens.CardDetails.CardDetailsScreen
-import com.example.foodandart.ui.screens.CardDetails.CardDetailsViewModel
+import com.example.foodandart.ui.screens.cardDetails.CardDetailsScreen
+import com.example.foodandart.ui.screens.cardDetails.CardDetailsViewModel
 import com.example.foodandart.ui.screens.favorites.FavoritesViewModel
 import com.example.foodandart.ui.screens.home.HomeViewModel
-import com.example.foodandart.ui.screens.home.position.LocationService
 import com.example.foodandart.ui.screens.login.sign_in.SignInScreen
 import com.example.foodandart.ui.screens.login.sign_in.SignInViewModel
 import com.example.foodandart.ui.screens.splash.SplashScreen
