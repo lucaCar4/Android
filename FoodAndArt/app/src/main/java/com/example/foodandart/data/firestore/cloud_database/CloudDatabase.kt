@@ -3,6 +3,8 @@ package com.example.foodandart.data.firestore.cloud_database
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.intl.Locale
 import com.example.foodandart.accountService
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentSnapshot
@@ -17,20 +19,20 @@ fun getCardsWithFilters(
     packages: Boolean,
 ): MutableList<Query> {
     val db = Firebase.firestore
-
+    val collection = "cards" + Locale.current.language
     val query = mutableListOf<Query>()
     if (restaurants) {
-        query.add(db.collection("cards").whereEqualTo("type", "Restaurant"))
+        query.add(db.collection(collection).whereEqualTo("type", "Restaurant"))
     }
     if (museums) {
-        query.add(db.collection("cards").whereEqualTo("type", "Museum"))
-        Log.d("Cards", "museums")
+        query.add(db.collection(collection).whereEqualTo("type", "Museum"))
+        Log.d(collection, "museums")
     }
     if (packages) {
-        query.add(db.collection("cards").whereEqualTo("type", "Package"))
+        query.add(db.collection(collection).whereEqualTo("type", "Package"))
     }
     if (query.isEmpty()) {
-        query.add(db.collection("cards"))
+        query.add(db.collection(collection))
     }
     return query
 }
@@ -72,10 +74,11 @@ suspend fun addRemoveFavoriteCard(cardId: String) {
 
 suspend fun getFavoritesCards(favoritesId : List<String>): MutableList<DocumentSnapshot> {
     val db = Firebase.firestore
+    val collection = "cards" + Locale.current.language
     val favoritesCards = mutableListOf<DocumentSnapshot>()
     for (id in favoritesId) {
         try {
-            val document = db.collection("cards").document(id).get().await()
+            val document = db.collection(collection).document(id).get().await()
             favoritesCards.add(document)
         } catch (_: Exception) {
         }
@@ -90,6 +93,7 @@ suspend fun userInfo(): DocumentSnapshot? {
 
 suspend fun getCardById(cardId: String): DocumentSnapshot? {
     val db = Firebase.firestore
-    return db.collection("cards").document(cardId).get().await()
+    val collection = "cards" + Locale.current.language
+    return db.collection(collection).document(cardId).get().await()
 }
 

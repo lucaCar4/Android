@@ -1,4 +1,4 @@
-package com.example.foodandart.ui.screens.CardDetails
+package com.example.foodandart.ui.screens.cardDetails
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 class CardDetailsViewModel : ViewModel() {
     
     var document by mutableStateOf<DocumentSnapshot?>(null)
+    var showMap by mutableStateOf(false)
     fun getDocubentById(cardId:String) {
         viewModelScope.launch {
             document = getCardById(cardId)

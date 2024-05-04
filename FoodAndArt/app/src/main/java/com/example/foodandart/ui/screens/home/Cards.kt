@@ -62,7 +62,7 @@ fun FoodAndArtCard(
 ) {
     val ctx = LocalContext.current
     Log.d("Cards", "Value $values, id = $id")
-    val data = values as? java.util.Map<String, Object>
+    val data = values as? Map<String, Object>
     Log.d("Cards", "Data ${data.toString()}")
     val images = data?.get("images") as? List<String>
     val image = getURIFromPath(images?.get(0) ?: "")

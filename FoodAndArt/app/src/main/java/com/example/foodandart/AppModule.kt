@@ -2,11 +2,12 @@ package com.example.foodandart
 
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.room.Room
 import com.example.foodandart.data.remote.OSMDataSource
 import com.example.foodandart.data.repositories.HomeChipsRepositories
 import com.example.foodandart.data.repositories.ThemeRepository
 import com.example.foodandart.service.AccountService
-import com.example.foodandart.ui.screens.CardDetails.CardDetailsViewModel
+import com.example.foodandart.ui.screens.cardDetails.CardDetailsViewModel
 import com.example.foodandart.ui.screens.favorites.FavoritesViewModel
 import com.example.foodandart.ui.screens.home.HomeViewModel
 import com.example.foodandart.ui.screens.login.sign_in.SignInViewModel
@@ -30,7 +31,18 @@ val appModule = module {
     //Repository
     single { HomeChipsRepositories(get()) }
     single { ThemeRepository(get()) }
+/*
+    single {
+        Room.databaseBuilder(
+            get(),
+            TodoListDatabase::class.java,
+            "todo-list"
+        ).build()
+    }
+    single { TodosRepository(get<TodoListDatabase>().todosDAO()) }
     // ViewModel
+    viewModel { ShoppingCartViewModel(get()) }
+*/
     viewModel{ HomeViewModel(get()) }
 
     viewModel{ FavoritesViewModel() }

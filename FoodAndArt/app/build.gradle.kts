@@ -108,4 +108,14 @@ dependencies {
 
     /*Gps*/
     implementation("com.google.android.gms:play-services-location:21.2.0")
+
+    /*Room*/
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+
+    /*OPenStreetMap*/
+    implementation("org.osmdroid:osmdroid-android:6.1.10")
+    implementation("org.osmdroid:osmdroid-mapsforge:6.1.10")
 }
