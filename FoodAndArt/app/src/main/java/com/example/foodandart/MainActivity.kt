@@ -37,19 +37,16 @@ import com.example.foodandart.data.models.Theme
 import com.example.foodandart.ui.FoodAndArtNavGraph
 import com.example.foodandart.ui.FoodAndArtRoute
 import com.example.foodandart.ui.composable.NavBar
-import com.example.foodandart.ui.screens.home.position.LocationService
-import com.example.foodandart.ui.screens.login.sign_up.utils.PermissionStatus
-import com.example.foodandart.ui.screens.login.sign_up.utils.rememberPermission
 import com.example.foodandart.ui.screens.profile.ProfileViewModel
 import org.koin.androidx.compose.koinViewModel
-
+import org.osmdroid.config.Configuration
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Configuration.getInstance().userAgentValue = "foodandart_osmdroid"
         setContent {
             val navController = rememberNavController()
-            val appState = rememberAppState(navController)
             val viewModel = koinViewModel<ProfileViewModel>()
             val state = viewModel.state
             FoodArtTheme(

@@ -34,8 +34,7 @@ fun Map(viewModel: CardDetailsViewModel) {
             },
             sheetState = sheetState
         ) {
-            val geoPoints =
-                viewModel.document?.data?.get("coordinates") as? List<com.google.firebase.firestore.GeoPoint>
+            val geoPoints = viewModel.document?.data?.get("coordinates") as? List<com.google.firebase.firestore.GeoPoint>
             if (!geoPoints.isNullOrEmpty()) {
                 MapScreen(geoPoints)
             } else {
@@ -79,5 +78,4 @@ fun MapViewWrapper(mapView: MapView) {
     AndroidView(
         factory = { mapView }
     )
-
 }

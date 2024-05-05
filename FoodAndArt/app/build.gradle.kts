@@ -115,7 +115,7 @@ dependencies {
     ksp("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
 
-    /*OPenStreetMap*/
+    /*OpenStreetMap*/
     implementation("org.osmdroid:osmdroid-android:6.1.10")
     implementation("org.osmdroid:osmdroid-mapsforge:6.1.10")
 }
