@@ -18,11 +18,13 @@ import java.io.File
 fun getURIFromPath(path: String) : Uri {
     val storage = Firebase.storage
     val storageRef = storage.reference
-    val spaceRef = storageRef.child(path)
     var uriRef by remember { mutableStateOf(Uri.EMPTY) }
-    spaceRef.downloadUrl.addOnSuccessListener { uri ->
-        uriRef = uri
-    }.addOnFailureListener { exception ->
+    if (path != "") {
+        val spaceRef = storageRef.child(path)
+        spaceRef.downloadUrl.addOnSuccessListener { uri ->
+            uriRef = uri
+        }.addOnFailureListener { exception ->
+        }
     }
     return uriRef
 }
@@ -39,9 +41,11 @@ suspend fun getUserImage(): Uri? {
     val storage = Firebase.storage
     val storageRef = storage.reference
     var uriRef = Uri.EMPTY
-    val spaceRef = storageRef.child("${accountService.currentUserId}/profile_image.jpg")
-    spaceRef.downloadUrl.addOnSuccessListener { uri ->
-        uriRef = uri
-    }.await()
+    if (accountService.currentUserId != "") {
+        val spaceRef = storageRef.child("${accountService.currentUserId}/profile_image.jpg")
+        spaceRef.downloadUrl.addOnSuccessListener { uri ->
+            uriRef = uri
+        }.await()
+    }
     return uriRef
 }
