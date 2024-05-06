@@ -3,15 +3,51 @@
     <string name="app_name">FoodAndArt</string>
     <string name="authenticate">Authenticate</string>
 
+    <!-- Permission -->
+        <string name="grant">Grant</string>
+        <string name="dismiss">Dismiss</string>
+        <string name="go_settings">Go to Settings</string>
+        <!-- Location -->
+            <string name="location_denied">Location Permission Denied</string>
+            <string name="location_denied_body">Location Permission must be enabled</string>
+            <string name="location_disable">Location Disabled</string>
+            <string name="location_disable_body">Location must be enabled</string>
+            <string name="location_perm">Location permission is required</string>
+        <!-- Camera -->
+            <string name="camera_denied">Camera Permission Denied</string>
+            <string name="camera_denied_body">Camera Permission must be enabled</string>
+            <string name="camera_perm">Camera permission is required</string>
+
+        <!-- Calendar -->
+            <string name="calendar_denied">Calendar Permission Denied</string>
+            <string name="calendar_denied_body">Calendar Permission must be enabled</string>
+            <string name="calendar_perm">Calendar permission is required</string>
+
+    <string name="camera">Events</string>
+    <string name="camera_body">Events</string>
+    <!-- Purchases -->
+        <string name="events">Events</string>
+        <string name="history">Purchases History</string>
+        <string name="add_event">Add to calendar</string>
+        <!-- Calendar -->
+            <string name="calendar_description_start">Booking for </string>
+            <string name="calendar_description_end"> people</string>
+    <!-- NavBar names -->
+        <string name="home">Home</string>
+        <string name="purchases">Purchases</string>
+        <string name="favorites">Favorites</string>
+        <string name="profile">Profile</string>
+        <string name="basket">Basket</string>
+
     <!-- Card Details -->
-    <string name="description">Description</string>
-    <string name="date">Date</string>
-    <string name="add_to_basket">Add to Basket</string>
-    <string name="show_map">Show Map</string>
+        <string name="description">Description</string>
+        <string name="date">Date</string>
+        <string name="add_to_basket">Add to Basket</string>
+        <string name="show_map">Show Map</string>
 
     <!-- Basket -->
-    <string name="title">Basket</string>
-    <string name="buy">Buy</string>
+        <string name="title">Basket</string>
+        <string name="buy">Buy</string>
 
     <!-- App Theme -->
         <string name="theme_light">Light</string>
