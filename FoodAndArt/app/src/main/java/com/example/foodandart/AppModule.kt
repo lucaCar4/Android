@@ -3,8 +3,10 @@ package com.example.foodandart
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import com.example.foodandart.data.database.BasketDatabase
 import com.example.foodandart.data.remote.OSMDataSource
-import com.example.foodandart.data.repositories.HomeChipsRepositories
+import com.example.foodandart.data.repositories.BasketRepository
+import com.example.foodandart.data.repositories.HomeChipsRepository
 import com.example.foodandart.data.repositories.ThemeRepository
 import com.example.foodandart.service.AccountService
 import com.example.foodandart.ui.screens.cardDetails.CardDetailsViewModel
@@ -14,6 +16,7 @@ import com.example.foodandart.ui.screens.login.sign_in.SignInViewModel
 import com.example.foodandart.ui.screens.splash.SplashViewModel
 import com.example.foodandart.ui.screens.login.sign_up.SignUpViewModel
 import com.example.foodandart.ui.screens.profile.ProfileViewModel
+import com.example.foodandart.ui.screens.shopping_cart.BasketViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
@@ -25,24 +28,22 @@ val Context.dataStore by preferencesDataStore("chips")
 val Context.themeStore by preferencesDataStore("themes")
 
 val appModule = module {
+    single {
+        Room.databaseBuilder(
+            get(),
+            BasketDatabase::class.java,
+            "basket"
+        ).build()
+    }
+    single { BasketRepository(get<BasketDatabase>().basketDAO()) }
     // DataStore
     single { get<Context>().dataStore }
     single { get<Context>().themeStore }
     //Repository
-    single { HomeChipsRepositories(get()) }
+    single { HomeChipsRepository(get()) }
+
     single { ThemeRepository(get()) }
-/*
-    single {
-        Room.databaseBuilder(
-            get(),
-            TodoListDatabase::class.java,
-            "todo-list"
-        ).build()
-    }
-    single { TodosRepository(get<TodoListDatabase>().todosDAO()) }
-    // ViewModel
-    viewModel { ShoppingCartViewModel(get()) }
-*/
+
     viewModel{ HomeViewModel(get()) }
 
     viewModel{ FavoritesViewModel() }
@@ -55,7 +56,10 @@ val appModule = module {
 
     viewModel{ ProfileViewModel(accountService, get()) }
 
-    viewModel { CardDetailsViewModel() }
+    viewModel { CardDetailsViewModel(get()) }
+
+    viewModel { BasketViewModel(get()) }
+
 
     /*HTTP REQUESTS*/
     single {
