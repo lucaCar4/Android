@@ -124,19 +124,19 @@ fun FilterChips(
 
     if (showPermissionDeniedAlert) {
         AlertDialog(
-            title = { Text("Location Permission Denied") },
-            text = { Text("Location Permission must be enabled") },
+            title = { Text(stringResource(id = R.string.location_denied)) },
+            text = { Text(stringResource(id = R.string.location_denied_body)) },
             confirmButton = {
                 TextButton(onClick = {
                     locationPermission.launchPermissionRequest()
                     showPermissionDeniedAlert = false
                 }) {
-                    Text("Grant")
+                    Text(stringResource(id = R.string.grant))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showPermissionDeniedAlert = false }) {
-                    Text("Dismiss")
+                    Text(stringResource(id = R.string.dismiss))
                 }
             },
             onDismissRequest = {
@@ -147,14 +147,14 @@ fun FilterChips(
 
     if (showLocationDisabledAlert) {
         AlertDialog(
-            title = { Text("Location Disabled") },
-            text = { Text("Location must be enabled") },
+            title = { Text(stringResource(id = R.string.location_disable)) },
+            text = { Text(stringResource(id = R.string.location_denied_body)) },
             confirmButton = {
                 TextButton(onClick = {
                     locationService.openLocationSettings()
                     showLocationDisabledAlert = false
                 }) {
-                    Text("Grant")
+                    Text(stringResource(id = R.string.grant))
                 }
             },
             onDismissRequest = {
@@ -167,8 +167,8 @@ fun FilterChips(
     if (showPermissionPermanentlyDeniedSnackBar) {
         LaunchedEffect(snackbarHostState) {
             val res = snackbarHostState.showSnackbar(
-                "Location permission is required",
-                "Go to Settings",
+                ctx.getString(R.string.location_perm),
+                ctx.getString(R.string.go_settings),
                 duration = SnackbarDuration.Long
             )
             if (res == SnackbarResult.ActionPerformed) {

@@ -40,13 +40,11 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.foodandart.R
 import com.example.foodandart.ui.screens.login.sign_up.SignUpViewModel
-import com.example.foodandart.ui.screens.login.sign_up.captureImageUri
 
 @Composable
 fun Camera( snackbarHostState:  SnackbarHostState, viewModel: SignUpViewModel) {
     var showPermissionDeniedAlert by remember { mutableStateOf(false) }
     var showPermissionPermanentlyDeniedSnackBar by remember { mutableStateOf(false) }
-    var showLocationDisabledAlert by remember { mutableStateOf(false) }
 
     val ctx = LocalContext.current
     val cameraLauncher = rememberCameraLauncher {}
@@ -105,19 +103,19 @@ fun Camera( snackbarHostState:  SnackbarHostState, viewModel: SignUpViewModel) {
 
     if (showPermissionDeniedAlert) {
         AlertDialog(
-            title = { Text("Location Permission Denied") },
-            text = { Text("Location Permission must be enabled") },
+            title = { Text(stringResource(id = R.string.camera_denied)) },
+            text = { Text(stringResource(id = R.string.camera_denied_body)) },
             confirmButton = {
                 TextButton(onClick = {
                     cameraPermission.launchPermissionRequest()
                     showPermissionDeniedAlert = false
                 }) {
-                    Text("Grant")
+                    Text(stringResource(id = R.string.grant))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showPermissionDeniedAlert = false }) {
-                    Text("Dismiss")
+                    Text(stringResource(id = R.string.dismiss))
                 }
             },
             onDismissRequest = {
@@ -126,34 +124,14 @@ fun Camera( snackbarHostState:  SnackbarHostState, viewModel: SignUpViewModel) {
         )
     }
 
-    if (showLocationDisabledAlert) {
-        AlertDialog(
-            title = { Text("Location Disabled") },
-            text = { Text("Location must be enabled") },
-            confirmButton = {
-                TextButton(onClick = {
-                    cameraLauncher.captureImage()
-                    showLocationDisabledAlert = false
-                }) {
-                    Text("Grant")
-                }
-            },
-            onDismissRequest = {
-                showLocationDisabledAlert = false
-            }
-        )
-    }
-
     if (showPermissionPermanentlyDeniedSnackBar) {
         LaunchedEffect(snackbarHostState) {
             val res = snackbarHostState.showSnackbar(
-                "Camera permission is required",
-                "Go to Settings",
+                ctx.getString(R.string.camera_perm),
+                ctx.getString(R.string.go_settings),
                 duration = SnackbarDuration.Long
             )
-            Log.d("Permm", "supero")
             if (res == SnackbarResult.ActionPerformed) {
-                Log.d("Permm", "llll")
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     data = Uri.fromParts("package", ctx.packageName, null)
