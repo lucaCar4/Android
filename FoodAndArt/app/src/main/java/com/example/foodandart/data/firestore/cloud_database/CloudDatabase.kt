@@ -1,11 +1,13 @@
 package com.example.foodandart.data.firestore.cloud_database
 
+import android.icu.util.LocaleData
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.intl.Locale
 import com.example.foodandart.accountService
+import com.example.foodandart.data.models.BasketState
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.GeoPoint
@@ -13,6 +15,8 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
+import java.time.LocalDate
+val languages = listOf("it", "en")
 fun getCardsWithFilters(
     restaurants: Boolean,
     museums: Boolean,
@@ -88,12 +92,43 @@ suspend fun getFavoritesCards(favoritesId : List<String>): MutableList<DocumentS
 
 suspend fun userInfo(): DocumentSnapshot? {
     val db = Firebase.firestore
-    return db.collection("users").document(accountService.currentUserId).get().await()
+    return if (accountService.currentUserId != "") {
+        Log.d("User", "User is ${accountService.currentUserId}" )
+        db.collection("users").document(accountService.currentUserId).get().await()
+    } else {
+        null
+    }
 }
 
 suspend fun getCardById(cardId: String): DocumentSnapshot? {
     val db = Firebase.firestore
     val collection = "cards" + Locale.current.language
     return db.collection(collection).document(cardId).get().await()
+}
+
+suspend fun addPurchase(basket : BasketState) {
+    basket.basket.forEach {elem ->
+        val data = hashMapOf(
+            "card" to elem.card,
+            "date" to elem.date,
+            "quantity" to elem.quantity,
+            "purchase_date" to LocalDate.now().toString()
+        )
+        val db = Firebase.firestore
+        languages.forEach {
+            val document = db.collection("cards$it").document(elem.card).get().await()
+            val dates = document.data?.get("dates") as? MutableMap<String, String>
+            if (!dates.isNullOrEmpty()) {
+                val limit = dates[elem.date]?.split('/')
+                if (limit != null && limit.size == 2) {
+                    dates[elem.date] = "${limit[0].toInt()+elem.quantity}/${limit[1]}"
+                }
+                db.collection("cards$it").document(elem.card).update("dates", dates).await()
+            }
+        }
+        if (accountService.currentUserId != "") {
+            db.collection("users").document(accountService.currentUserId).collection("purchases").add(data).await()
+        }
+    }
 }
 

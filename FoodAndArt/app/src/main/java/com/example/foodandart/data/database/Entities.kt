@@ -5,14 +5,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Todo(
+data class BasketElem(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     @ColumnInfo
-    val card: String,
+    val card : String,
     @ColumnInfo
-    val date: String,
+    val date : String,
     @ColumnInfo
-    val quantity: Int = 0
-
+    var quantity : Int = 0
 )

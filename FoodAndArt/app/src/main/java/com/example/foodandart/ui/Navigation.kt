@@ -30,6 +30,8 @@ import com.example.foodandart.ui.screens.splash.SplashViewModel
 import com.example.foodandart.ui.screens.login.sign_up.SignUpScreen
 import com.example.foodandart.ui.screens.login.sign_up.SignUpViewModel
 import com.example.foodandart.ui.screens.profile.ProfileViewModel
+import com.example.foodandart.ui.screens.shopping_cart.BasketScreen
+import com.example.foodandart.ui.screens.shopping_cart.BasketViewModel
 import org.koin.androidx.compose.koinViewModel
 
 sealed class FoodAndArtRoute(
@@ -44,6 +46,13 @@ sealed class FoodAndArtRoute(
         "Home",
         Icons.Outlined.Home,
         Icons.Filled.Home,
+        listOf(navArgument("cardId") { type = NavType.StringType })
+    )
+    data object Basket : FoodAndArtRoute(
+        "Basket",
+        "Basket",
+        null,
+        null,
         listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
@@ -124,7 +133,12 @@ fun FoodAndArtNavGraph(
             }
         }
 
-
+        with(FoodAndArtRoute.Basket) {
+            composable(route) {
+                val basketViewModel = koinViewModel<BasketViewModel>()
+                BasketScreen(navController, basketViewModel)
+            }
+        }
 
         with(FoodAndArtRoute.Favorites) {
             composable(route) {

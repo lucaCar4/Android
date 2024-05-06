@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -48,13 +49,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.foodandart.R
+import com.example.foodandart.data.database.BasketElem
 import com.example.foodandart.data.firestore.storage.getURIFromPath
+import com.example.foodandart.data.models.BasketState
 import com.example.foodandart.ui.screens.cardDetails.map.Map
+import org.koin.core.context.startKoin
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,8 +89,9 @@ fun CardDetailsScreen(navController: NavController, id: String, viewModel: CardD
                     title = {
                         Text(
                             text = viewModel.document!!.data?.get("title").toString(),
-                            textAlign = TextAlign.Center
-                        )
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth(),
+                            )
                     },
                     navigationIcon = {
                         Icon(
@@ -201,6 +207,7 @@ fun DateChooser(viewModel: CardDetailsViewModel) {
 
 @Composable
 fun BuyCard(viewModel: CardDetailsViewModel) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
     Row(
         verticalAlignment = Alignment.CenterVertically
     )
@@ -236,9 +243,37 @@ fun BuyCard(viewModel: CardDetailsViewModel) {
             )
         }
         Spacer(modifier = Modifier.padding(6.dp))
-        Button(onClick = { /*TODO*/ }, enabled = viewModel.quantity > 0) {
+        Button(onClick = {
+            if (viewModel.document != null) {
+                checkExistingCard(viewModel = viewModel, state = state)
+                viewModel.actions.addElem(
+                    BasketElem(
+                        card = viewModel.document?.id ?: "" ,
+                        date = viewModel.selectedDate,
+                        quantity = viewModel.quantity
+                    )
+                )
+
+            }
+        }, enabled = viewModel.quantity > 0) {
             Text(text = stringResource(id = R.string.add_to_basket))
         }
+        Spacer(modifier = Modifier.padding(6.dp))
+        Text(text = state.basket.size.toString())
+    }
+}
+
+private fun checkExistingCard(state: BasketState, viewModel: CardDetailsViewModel) {
+    val elems = mutableListOf<BasketElem>()
+    state.basket.forEach {elem ->
+        if (viewModel.document != null) {
+            if (elem.card == viewModel.document!!.id && viewModel.selectedDate == elem.date )  {
+                elems.add(elem)
+            }
+        }
+    }
+    elems.forEach {
+        viewModel.actions.removeElem(it)
     }
 }
 
