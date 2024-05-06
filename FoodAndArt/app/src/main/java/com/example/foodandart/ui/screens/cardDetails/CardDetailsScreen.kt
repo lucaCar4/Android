@@ -51,7 +51,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.foodandart.R
@@ -59,13 +58,9 @@ import com.example.foodandart.data.database.BasketElem
 import com.example.foodandart.data.firestore.storage.getURIFromPath
 import com.example.foodandart.data.models.BasketState
 import com.example.foodandart.ui.screens.cardDetails.map.Map
-import org.koin.core.context.startKoin
-import java.time.LocalDate
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardDetailsScreen(navController: NavController, id: String, viewModel: CardDetailsViewModel) {
-    val backStackEntry by navController.currentBackStackEntryAsState()
     val ctx = LocalContext.current
     viewModel.setDocument(id)
     if (viewModel.document != null) {
@@ -162,7 +157,6 @@ fun CardDetailsScreen(navController: NavController, id: String, viewModel: CardD
 fun DateChooser(viewModel: CardDetailsViewModel) {
     var expanded by remember { mutableStateOf(false) }
     if (!viewModel.dates.isEmpty()) {
-        val currentDate = LocalDate.now()
         Log.d("Datee", viewModel.selectedDate)
         ExposedDropdownMenuBox(
             expanded = expanded,

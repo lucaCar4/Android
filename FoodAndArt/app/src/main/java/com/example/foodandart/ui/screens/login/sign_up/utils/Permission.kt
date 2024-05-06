@@ -2,7 +2,6 @@ package com.example.foodandart.ui.screens.login.sign_up.utils
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -19,7 +18,7 @@ enum class PermissionStatus {
     Unknown;
 
     val isGranted get() = this == Granted
-    val isDenied get() = this == Denied || this == PermanentlyDenied
+    //val isDenied get() = this == Denied || this == PermanentlyDenied
 }
 
 interface PermissionHandler {

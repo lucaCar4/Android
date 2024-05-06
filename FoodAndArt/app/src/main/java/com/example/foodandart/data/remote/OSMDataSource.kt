@@ -1,6 +1,8 @@
 package com.example.foodandart.data.remote
 
 import android.util.Log
+import com.example.foodandart.ui.screens.home.position.Coordinates
+import com.google.firebase.firestore.GeoPoint
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -25,7 +27,12 @@ class OSMDataSource(
     private val baseUrl = "https://nominatim.openstreetmap.org"
     suspend fun searchPlaces(query: String): List<OSMPlace> {
         val url = "$baseUrl/?city=$query&format=json&limit=1&countrycodes=IT"
+        return httpClient.get(url).body()
+    }
+    suspend fun getPalaceName(coordinates: GeoPoint) : OSMPlace {
+        val url = "$baseUrl/reverse?lat=${coordinates.latitude}&lon=${coordinates.longitude}&format=json"
         Log.d("Dest", url)
         return httpClient.get(url).body()
     }
+
 }

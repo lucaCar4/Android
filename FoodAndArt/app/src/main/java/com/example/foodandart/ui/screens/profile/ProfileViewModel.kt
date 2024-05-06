@@ -27,7 +27,7 @@ class ProfileViewModel(
     var name by mutableStateOf("")
     var city by mutableStateOf("")
 
-    var imageUri by mutableStateOf(Uri.EMPTY)
+    var imageUri: Uri by mutableStateOf(Uri.EMPTY)
     init {
         viewModelScope.launch {
             getUserInfo()
@@ -76,7 +76,7 @@ class ProfileViewModel(
                         }
                     }
             }
-            imageUri = getUserImage()
+            imageUri = getUserImage() ?: Uri.EMPTY
             Log.d("Uri", imageUri.path.toString())
         }
     }

@@ -12,10 +12,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.foodandart.accountService
 import com.example.foodandart.data.firestore.cloud_database.addRemoveFavoriteCard
 import com.example.foodandart.data.firestore.cloud_database.getCardsWithFilters
-import com.example.foodandart.data.repositories.HomeChipsRepositories
+import com.example.foodandart.data.repositories.HomeChipsRepository
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.GeoPoint
-import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,13 +27,10 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class HomeViewModel(private val repository: HomeChipsRepositories) : ViewModel() {
-    var restaurants by mutableStateOf("false")
-        private set
-    var museums by mutableStateOf("false")
-        private set
-    var packages by mutableStateOf("false")
-        private set
+class HomeViewModel(private val repository: HomeChipsRepository) : ViewModel() {
+    private var restaurants by mutableStateOf("false")
+    private var museums by mutableStateOf("false")
+    private var packages by mutableStateOf("false")
     var position by mutableStateOf("false")
         private set
 
@@ -83,16 +79,17 @@ class HomeViewModel(private val repository: HomeChipsRepositories) : ViewModel()
     private fun favoritesChangeListener() {
         favoritesJob = CoroutineScope(Dispatchers.IO).launch {
             val db = Firebase.firestore
-            db.collection("users").document(accountService.currentUserId).addSnapshotListener { snapshot, e ->
-                if (snapshot != null && snapshot.data != null) {
-                    Log.d("Favorites", "UpdateVav")
-                    val fav = snapshot.data?.get("favorites") as? List<String>
-                    if (fav != null && favorites != fav) {
-                        favorites.addAll(fav.subtract(favorites))
-                        favorites.retainAll(fav)
+            db.collection("users").document(accountService.currentUserId)
+                .addSnapshotListener { snapshot, e ->
+                    if (snapshot != null && snapshot.data != null) {
+                        Log.d("Favorites", "UpdateVav")
+                        val fav = snapshot.data?.get("favorites") as? List<String>
+                        if (fav != null && favorites != fav) {
+                            favorites.addAll(fav.subtract(favorites))
+                            favorites.retainAll(fav)
+                        }
                     }
                 }
-            }
         }
     }
 
@@ -106,7 +103,8 @@ class HomeViewModel(private val repository: HomeChipsRepositories) : ViewModel()
         val newDocs: MutableMap<String, Map<String, Object>> = mutableMapOf()
         Log.d("Cards", "Rest $restaurants, Mus $museums, Pack $packages, Pos $position")
         docs.clear()
-        val querys = getCardsWithFilters(restaurants.toBoolean(), museums.toBoolean(), packages.toBoolean())
+        val querys =
+            getCardsWithFilters(restaurants.toBoolean(), museums.toBoolean(), packages.toBoolean())
         Log.d("Card", "Docs ${querys.size}")
         querys.forEach { query ->
             query.get().addOnSuccessListener { documents ->
@@ -143,10 +141,7 @@ class HomeViewModel(private val repository: HomeChipsRepositories) : ViewModel()
             val targetCoord = value["coordinates"] as? List<GeoPoint>
             targetCoord?.forEach {
                 val distance = calculateDistance(
-                    geoPoint.latitude,
-                    geoPoint.longitude,
-                    it.latitude,
-                    it.longitude
+                    geoPoint.latitude, geoPoint.longitude, it.latitude, it.longitude
                 )
                 if (distance > 30) {
                     removeList.add(key)
@@ -157,10 +152,7 @@ class HomeViewModel(private val repository: HomeChipsRepositories) : ViewModel()
     }
 
     private fun calculateDistance(
-        myLatitude: Double,
-        myLongitude: Double,
-        targetLatitude: Double,
-        targetLongitude: Double
+        myLatitude: Double, myLongitude: Double, targetLatitude: Double, targetLongitude: Double
     ): Double {
 
         val earthRadius = 6371 // Raggio medio della Terra in chilometri

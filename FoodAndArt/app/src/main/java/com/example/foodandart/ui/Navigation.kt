@@ -9,6 +9,8 @@ import com.example.foodandart.ui.screens.favorites.FavoritesScreen
 import com.example.foodandart.ui.screens.home.HomeScreen
 import com.example.foodandart.ui.screens.profile.ProfileScreen
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ListAlt
+import androidx.compose.material.icons.automirrored.outlined.ListAlt
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Star
@@ -30,6 +32,8 @@ import com.example.foodandart.ui.screens.splash.SplashViewModel
 import com.example.foodandart.ui.screens.login.sign_up.SignUpScreen
 import com.example.foodandart.ui.screens.login.sign_up.SignUpViewModel
 import com.example.foodandart.ui.screens.profile.ProfileViewModel
+import com.example.foodandart.ui.screens.purchases.PurchasesScreen
+import com.example.foodandart.ui.screens.purchases.PurchasesViewModel
 import com.example.foodandart.ui.screens.shopping_cart.BasketScreen
 import com.example.foodandart.ui.screens.shopping_cart.BasketViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -53,6 +57,13 @@ sealed class FoodAndArtRoute(
         "Basket",
         null,
         null,
+        listOf(navArgument("cardId") { type = NavType.StringType })
+    )
+    data object Purchases : FoodAndArtRoute(
+        "Purchases",
+        "Purchases",
+        Icons.AutoMirrored.Outlined.ListAlt,
+        Icons.AutoMirrored.Filled.ListAlt,
         listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
@@ -108,8 +119,8 @@ sealed class FoodAndArtRoute(
     )
 
     companion object {
-        val routes = setOf(Home, Favorites, Profile, SignIn, SignUp,  Splash)
-        val mainRoutes = setOf(Home, Favorites, Profile)
+        val routes = setOf(Home, Purchases, Favorites, Profile, SignIn, SignUp,  Splash)
+        val mainRoutes = setOf(Home, Purchases, Favorites, Profile)
     }
 }
 
@@ -130,6 +141,13 @@ fun FoodAndArtNavGraph(
             composable(route) {
                 val homeViewModel = koinViewModel<HomeViewModel>()
                 HomeScreen(navController, homeViewModel)
+            }
+        }
+
+        with(FoodAndArtRoute.Purchases) {
+            composable(route) {
+                val purchasesViewModel = koinViewModel<PurchasesViewModel>()
+                PurchasesScreen(navController , purchasesViewModel)
             }
         }
 

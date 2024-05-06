@@ -13,11 +13,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.RemoveRedEye
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -25,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -38,10 +35,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foodandart.R
 import com.example.foodandart.ui.FoodAndArtRoute
-import com.example.foodandart.ui.screens.splash.SplashViewModel
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun SignInScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
@@ -68,9 +63,11 @@ fun SignInScreen(
                 .padding(16.dp, 4.dp)
         )
 
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp))
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+        )
 
         OutlinedTextField(
             singleLine = true,
@@ -83,13 +80,13 @@ fun SignInScreen(
             leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email") },
             isError = email.value.isEmpty() || !viewModel.emailIsCorrect || !viewModel.generalCorrect,
             supportingText = {
-                if(email.value.isEmpty()) {
+                if (email.value.isEmpty()) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = stringResource(id = R.string.empty_email),
                         textAlign = TextAlign.End,
                     )
-                } else if(!viewModel.emailIsCorrect) {
+                } else if (!viewModel.emailIsCorrect) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = stringResource(id = R.string.email_badly_formatted),
@@ -104,7 +101,7 @@ fun SignInScreen(
                 }
             },
         )
-        var visibility : VisualTransformation =  PasswordVisualTransformation()
+        var visibility: VisualTransformation = PasswordVisualTransformation()
         if (!viewModel.passwordHide) {
             visibility = VisualTransformation.None
         }
@@ -118,15 +115,21 @@ fun SignInScreen(
             onValueChange = { viewModel.updatePassword(it) },
             placeholder = { Text(stringResource(R.string.password)) },
             leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Email") },
-            trailingIcon = { 
-                IconButton( onClick = {viewModel.passwordHide = !viewModel.passwordHide}) {
+            trailingIcon = {
+                IconButton(onClick = { viewModel.passwordHide = !viewModel.passwordHide }) {
                     if (viewModel.passwordHide) {
-                        Icon(imageVector = Icons.Outlined.VisibilityOff , contentDescription = "Open Eye")
+                        Icon(
+                            imageVector = Icons.Outlined.VisibilityOff,
+                            contentDescription = "Open Eye"
+                        )
                     } else {
-                        Icon(imageVector = Icons.Outlined.Visibility , contentDescription = "Close Eye")
+                        Icon(
+                            imageVector = Icons.Outlined.Visibility,
+                            contentDescription = "Close Eye"
+                        )
                     }
                 }
-           },
+            },
             visualTransformation = visibility,
             isError = password.value.isEmpty() || !viewModel.generalCorrect,
             supportingText = {
@@ -147,15 +150,17 @@ fun SignInScreen(
         )
 
 
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp))
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+        )
 
         Button(
             onClick = {
                 focusManager.clearFocus()
                 viewModel.onSignInClick(navController)
-                      },
+            },
             modifier = modifier
                 .fillMaxWidth()
                 .padding(16.dp, 0.dp)
@@ -167,9 +172,11 @@ fun SignInScreen(
             )
         }
 
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp))
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp)
+        )
 
         TextButton(onClick = { navController.navigate(FoodAndArtRoute.SignUp.route) }) {
             Text(text = stringResource(R.string.sign_up_description), fontSize = 16.sp)

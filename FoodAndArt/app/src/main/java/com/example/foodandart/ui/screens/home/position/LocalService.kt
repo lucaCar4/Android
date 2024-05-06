@@ -20,10 +20,6 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.firebase.firestore.GeoPoint
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
 
 enum class MonitoringStatus {
     Monitoring,
@@ -35,17 +31,14 @@ data class Coordinates(val latitude: Double, val longitude: Double)
 
 class LocationService(private val ctx: Context, viewModel: HomeViewModel) {
 
-    val DISTANCE_CHIP = 30
     var coordinates: Coordinates? by mutableStateOf(null)
         private set
 
-    var monitoringStatus: MonitoringStatus by mutableStateOf(MonitoringStatus.NotMonitoring)
-        private set
+    private var monitoringStatus: MonitoringStatus by mutableStateOf(MonitoringStatus.NotMonitoring)
 
-    var isLocationEnabled: Boolean? by mutableStateOf(null)
-        private set
+    private var isLocationEnabled: Boolean? by mutableStateOf(null)
 
-    val locationProviderClient = LocationServices.getFusedLocationProviderClient(ctx)
+    private val locationProviderClient = LocationServices.getFusedLocationProviderClient(ctx)
 
     private val locationRequest =
         LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
@@ -97,14 +90,4 @@ class LocationService(private val ctx: Context, viewModel: HomeViewModel) {
         monitoringStatus = MonitoringStatus.Paused
     }
 
-    fun pauseLocationRequest() {
-        if (monitoringStatus != MonitoringStatus.Monitoring) return
-        locationProviderClient.removeLocationUpdates(locationCallback)
-        monitoringStatus = MonitoringStatus.NotMonitoring
-    }
-    fun resumeLocationRequest() {
-        if (monitoringStatus != MonitoringStatus.Paused) return
-        requestCurrentLocation()
-        monitoringStatus = MonitoringStatus.Monitoring
-    }
 }

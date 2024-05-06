@@ -1,15 +1,12 @@
 package com.example.foodandart.ui.screens.login.sign_up.utils
 
-import android.Manifest
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -18,27 +15,26 @@ import androidx.core.content.FileProvider
 import java.io.File
 
 interface CameraLauncher {
-    var captureImageUri : Uri
+    var captureImageUri: Uri
     fun captureImage()
 }
-var imageUri = Uri.EMPTY
+
+var imageUri: Uri = Uri.EMPTY
 
 @Composable
 fun rememberCameraLauncher(
     onResult: (Uri) -> Unit = {}
-) : CameraLauncher {
+): CameraLauncher {
     val ctx = LocalContext.current
 
     var capturedImageUri by remember { mutableStateOf(Uri.EMPTY) }
     val cameraActivityLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {pictureTaken ->
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { pictureTaken ->
             if (pictureTaken) {
-                Log.d("Dest", "Picture take ${imageUri.path.toString()}")
                 capturedImageUri = imageUri
-                Log.d("Dest", "Cap take ${capturedImageUri.path.toString()}")
                 onResult(capturedImageUri)
             }
-    }
+        }
 
     val cameraLauncher by remember {
         derivedStateOf {
@@ -47,7 +43,8 @@ fun rememberCameraLauncher(
 
                 override fun captureImage() {
                     val imageFile = File.createTempFile("tmp_image", ".jpg", ctx.externalCacheDir)
-                    val newImageUri = FileProvider.getUriForFile(ctx, ctx.packageName + ".provider", imageFile)
+                    val newImageUri =
+                        FileProvider.getUriForFile(ctx, ctx.packageName + ".provider", imageFile)
                     Log.d("Dest", newImageUri.path.toString())
                     imageUri = newImageUri
                     cameraActivityLauncher.launch(newImageUri)
@@ -58,7 +55,7 @@ fun rememberCameraLauncher(
     return cameraLauncher
 }
 
-fun takePicture(cameraPermission :  PermissionHandler, cameraLauncher :  CameraLauncher) {
+fun takePicture(cameraPermission: PermissionHandler, cameraLauncher: CameraLauncher) {
     if (cameraPermission.status.isGranted) {
         cameraLauncher.captureImage()
     } else {

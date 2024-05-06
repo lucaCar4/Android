@@ -9,14 +9,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.foodandart.service.AccountService
 import com.example.foodandart.ui.FoodAndArtRoute
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class SignInViewModel (
+class SignInViewModel(
     private val accountService: AccountService
-) :ViewModel() {
+) : ViewModel() {
     val email = MutableStateFlow("")
     val password = MutableStateFlow("")
     var emailIsCorrect by mutableStateOf(true)
@@ -47,21 +45,12 @@ class SignInViewModel (
 
     private fun validate(exception: String) {
         Log.d("Login", exception)
-        if ( exception.contains("credential") ) {
+        if (exception.contains("credential")) {
             emailIsCorrect = true
             generalCorrect = false
-        } else if ( exception.contains("email") )  {
+        } else if (exception.contains("email")) {
             emailIsCorrect = false
             generalCorrect = true
         }
-    }
-
-
-    companion object {
-        const val ERROR_TAG = "NOTES APP ERROR"
-    }
-
-    fun onSignUpClick(navController: NavController) {
-        navController.navigate(FoodAndArtRoute.SignUp.route)
     }
 }

@@ -1,23 +1,15 @@
 package com.example.foodandart.ui.screens.cardDetails.map
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import com.example.foodandart.ui.screens.cardDetails.CardDetailsViewModel
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import org.osmdroid.views.overlay.Marker
@@ -26,7 +18,6 @@ import org.osmdroid.views.overlay.Marker
 @Composable
 fun Map(viewModel: CardDetailsViewModel) {
     val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
     if (viewModel.showMap) {
         ModalBottomSheet(
             onDismissRequest = {

@@ -1,15 +1,11 @@
 package com.example.foodandart.ui.screens.home
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -42,7 +37,7 @@ import com.example.foodandart.data.firestore.storage.getURIFromPath
 import com.example.foodandart.ui.FoodAndArtRoute
 
 @Composable
-fun Cards(viewModel: HomeViewModel, contentPadding: PaddingValues, navController: NavController) {
+fun Cards(viewModel: HomeViewModel, navController: NavController) {
     LazyColumn(
         modifier = Modifier.padding(16.dp)
     ) {
@@ -52,7 +47,6 @@ fun Cards(viewModel: HomeViewModel, contentPadding: PaddingValues, navController
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodAndArtCard(
     id: String,
@@ -61,12 +55,9 @@ fun FoodAndArtCard(
     navController: NavController
 ) {
     val ctx = LocalContext.current
-    Log.d("Cards", "Value $values, id = $id")
     val data = values as? Map<String, Object>
-    Log.d("Cards", "Data ${data.toString()}")
     val images = data?.get("images") as? List<String>
     val image = getURIFromPath(images?.get(0) ?: "")
-    //Log.d("Cards", "${document.data["title"].toString()}, Images : ${images?.get(0)}")
     Card(
         modifier = Modifier
             .fillMaxSize()

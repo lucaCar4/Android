@@ -8,12 +8,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.map
 
 
-class HomeChipsRepositories (private val dataStore : DataStore<Preferences>) {
+class HomeChipsRepository (private val dataStore : DataStore<Preferences>) {
     companion object {
         private val RESTAURANTS_KEY = stringPreferencesKey("restaurants")
         private val MUSEUMS_KEY = stringPreferencesKey("museums")
         private val PACKAGES_KEY = stringPreferencesKey("packages")
-        private val POSITION_KEY = stringPreferencesKey("position")
     }
 
     val restaurants = dataStore.data.map { it[RESTAURANTS_KEY] ?: "false" }

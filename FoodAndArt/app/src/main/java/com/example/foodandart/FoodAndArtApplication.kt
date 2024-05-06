@@ -8,7 +8,7 @@ import org.koin.core.context.startKoin
 class FoodAndArtApplication : Application(){
     override fun onCreate() {
         super.onCreate()
-        startKoin() {
+        startKoin {
             androidLogger()
             androidContext(this@FoodAndArtApplication)
             modules(appModule)

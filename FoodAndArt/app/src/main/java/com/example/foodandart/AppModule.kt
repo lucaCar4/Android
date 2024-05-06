@@ -16,6 +16,7 @@ import com.example.foodandart.ui.screens.login.sign_in.SignInViewModel
 import com.example.foodandart.ui.screens.splash.SplashViewModel
 import com.example.foodandart.ui.screens.login.sign_up.SignUpViewModel
 import com.example.foodandart.ui.screens.profile.ProfileViewModel
+import com.example.foodandart.ui.screens.purchases.PurchasesViewModel
 import com.example.foodandart.ui.screens.shopping_cart.BasketViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -59,6 +60,8 @@ val appModule = module {
     viewModel { CardDetailsViewModel(get()) }
 
     viewModel { BasketViewModel(get()) }
+
+    viewModel { PurchasesViewModel() }
 
 
     /*HTTP REQUESTS*/

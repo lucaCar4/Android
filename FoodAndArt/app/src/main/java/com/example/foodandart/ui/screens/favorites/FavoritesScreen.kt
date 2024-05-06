@@ -44,13 +44,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.foodandart.data.firestore.storage.getURIFromPath
-import com.example.foodandart.ui.screens.home.FoodAndArtCard
-import com.example.foodandart.ui.screens.home.HomeViewModel
-import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.google.firebase.firestore.firestore
-
 
 @Composable
 fun FavoritesScreen(

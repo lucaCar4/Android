@@ -14,14 +14,13 @@ import androidx.compose.runtime.setValue
 import com.example.foodandart.data.firestore.cloud_database.addUserDocument
 import com.example.foodandart.data.firestore.storage.updateUserImage
 import com.google.firebase.firestore.GeoPoint
-import kotlinx.coroutines.InternalCoroutinesApi
 
 class SignUpViewModel( private val accountService: AccountService) : ViewModel() {
 
-    private val LENGTH = 6
+    private val length = 6
 
     var city by mutableStateOf("")
-    var cityGeoPoint by mutableStateOf(GeoPoint(0.0,0.0))
+    private var cityGeoPoint by mutableStateOf(GeoPoint(0.0,0.0))
     var existDestination by mutableStateOf(false)
 
     var image: Uri by mutableStateOf(Uri.EMPTY)
@@ -59,20 +58,16 @@ class SignUpViewModel( private val accountService: AccountService) : ViewModel()
         Log.d("Login", exception)
         if (exception.contains("email")) {
             emailAlreadyUsed = true
-            passwordLength = password.length < LENGTH
+            passwordLength = password.length < length
         } else if (exception.contains("password")) {
             passwordLength = true
             emailAlreadyUsed = false
         }
     }
-
-
-    @OptIn(InternalCoroutinesApi::class)
     fun onSignUpClick(navController: NavController) {
         viewModelScope.launch {
             isWrong = password != confirmPassword
             var result = ""
-            Log.d("Storage", ", ${!isWrong}, ${existDestination}")
             if (!isWrong && existDestination ) {
                 result = accountService.signUp(email, password)
                 if (result == "") {

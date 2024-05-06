@@ -5,9 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.foodandart.service.AccountService
 import com.example.foodandart.ui.FoodAndArtRoute
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-
 
 class SplashViewModel ( private val accountService: AccountService ) : ViewModel() {
 
