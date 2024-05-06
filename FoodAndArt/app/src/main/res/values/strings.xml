@@ -3,6 +3,16 @@
     <string name="app_name">FoodAndArt</string>
     <string name="authenticate">Authenticate</string>
 
+    <!-- Card Details -->
+    <string name="description">Description</string>
+    <string name="date">Date</string>
+    <string name="add_to_basket">Add to Basket</string>
+    <string name="show_map">Show Map</string>
+
+    <!-- Basket -->
+    <string name="title">Basket</string>
+    <string name="buy">Buy</string>
+
     <!-- App Theme -->
         <string name="theme_light">Light</string>
         <string name="theme_dark">Dark</string>
@@ -13,8 +23,8 @@
         <string name="museums">Museums</string>
         <string name="packages">Packages</string>
         <string name="position">Position</string>
-    <!-- Login and Log out -->
 
+    <!-- Login and Log out -->
         <string name="email">Email</string>
         <string name="password">Password</string>
         <string name="cancel">Cancel</string>
