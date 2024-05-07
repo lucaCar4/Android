@@ -33,6 +33,7 @@ suspend fun updateUserImage(userId: String, image: Uri) {
     val storageRef = storage.reference
     val riversRef = storageRef.child("$userId/profile_image.jpg")
     riversRef.putFile(image).await()
+    Log.d("Imageee", "Caricata")
 }
 
 suspend fun getUserImage(): Uri? {
@@ -41,9 +42,13 @@ suspend fun getUserImage(): Uri? {
     var uriRef = Uri.EMPTY
     if (accountService.currentUserId != "") {
         val spaceRef = storageRef.child("${accountService.currentUserId}/profile_image.jpg")
-        spaceRef.downloadUrl.addOnSuccessListener { uri ->
-            uriRef = uri
-        }.await()
+        spaceRef.downloadUrl
+            .addOnSuccessListener { uri ->
+                uriRef = uri
+            }
+            .addOnFailureListener { exception ->
+                uriRef = Uri.EMPTY
+            }.await()
     }
     return uriRef
 }

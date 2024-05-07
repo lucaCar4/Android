@@ -1,15 +1,21 @@
 package com.example.foodandart.ui.screens.login.sign_up
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -43,9 +49,32 @@ fun SignUpScreen(
     navController: NavController,
     viewModel: SignUpViewModel
 ) {
+    if (viewModel.isSignUp) {
+        SignUp(viewModel = viewModel, navController = navController)
+    } else {
+        WaitForSignUp(viewModel = viewModel)
+    }
+    
+}
+@Composable
+fun WaitForSignUp(viewModel: SignUpViewModel) {
+    Column(
+        modifier =
+        Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .background(color = MaterialTheme.colorScheme.background)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
+    }
+}
+@Composable
+fun SignUp(viewModel: SignUpViewModel, navController: NavController) {
     val snackbarHostState = remember { SnackbarHostState() }
     val focus = LocalFocusManager.current
-
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { contentPadding ->
@@ -85,7 +114,6 @@ fun SignUpScreen(
             }
         }
     }
-
 }
 
 @Composable

@@ -19,20 +19,27 @@ class SignUpViewModel( private val accountService: AccountService) : ViewModel()
 
     private val length = 6
 
+    var isSignUp by mutableStateOf(true)
+
     var city by mutableStateOf("")
     private var cityGeoPoint by mutableStateOf(GeoPoint(0.0,0.0))
-    var existDestination by mutableStateOf(false)
 
     var image: Uri by mutableStateOf(Uri.EMPTY)
 
     var name by mutableStateOf("")
-
     var email by mutableStateOf("")
     var password by mutableStateOf("")
     var confirmPassword by mutableStateOf("")
+
     var isWrong by  mutableStateOf(false)
     var emailAlreadyUsed by  mutableStateOf(false)
     var passwordLength by  mutableStateOf(false)
+
+
+    var imageChooser by mutableStateOf(false)
+    var showImagePicker by mutableStateOf(false)
+    var captureImage by mutableStateOf(false)
+
 
     fun updateEmail(newEmail: String) {
         email = newEmail
@@ -68,14 +75,19 @@ class SignUpViewModel( private val accountService: AccountService) : ViewModel()
         viewModelScope.launch {
             isWrong = password != confirmPassword
             var result = ""
-            if (!isWrong && existDestination ) {
+            if (!isWrong ) {
                 result = accountService.signUp(email, password)
                 if (result == "") {
-                    updateUserImage(accountService.currentUserId, image)
+                    isSignUp = false
+                    if (image != Uri.EMPTY) {
+                        updateUserImage(accountService.currentUserId, image)
+                    }
                     addUserDocument(name, cityGeoPoint, city)
                     navController.navigate(FoodAndArtRoute.Home.route) {
                         navController.popBackStack()
                     }
+                } else {
+                    validate(result)
                 }
             } else {
                 validate(result)

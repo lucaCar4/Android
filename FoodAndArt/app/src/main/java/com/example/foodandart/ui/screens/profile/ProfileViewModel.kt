@@ -27,10 +27,9 @@ class ProfileViewModel(
     var name by mutableStateOf("")
     var city by mutableStateOf("")
 
-    var imageUri: Uri by mutableStateOf(Uri.EMPTY)
+    var imageUri: Uri by mutableStateOf( Uri.EMPTY)
     init {
         viewModelScope.launch {
-            getUserInfo()
             state = repository.theme.first()
         }
     }
@@ -65,16 +64,16 @@ class ProfileViewModel(
         }
     }
 
-    private fun getUserInfo() {
+    fun getUserInfo() {
         viewModelScope.launch {
             val document = userInfo()
             if (document != null && document.data != null) {
-                    for (data in document.data!!) {
-                        when(data.key.toString()) {
-                            "name" -> name = data.value.toString()
-                            "city" -> city = data.value.toString()
-                        }
+                for (data in document.data!!) {
+                    when(data.key.toString()) {
+                        "name" -> name = data.value.toString()
+                        "city" -> city = data.value.toString()
                     }
+                }
             }
             imageUri = getUserImage() ?: Uri.EMPTY
             Log.d("Uri", imageUri.path.toString())

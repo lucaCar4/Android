@@ -3,6 +3,9 @@
     <string name="app_name">FoodAndArt</string>
     <string name="authenticate">Authenticate</string>
 
+    <!-- Charts -->
+        <string name="charts">Stats</string>
+
     <!-- Permission -->
         <string name="grant">Grant</string>
         <string name="dismiss">Dismiss</string>

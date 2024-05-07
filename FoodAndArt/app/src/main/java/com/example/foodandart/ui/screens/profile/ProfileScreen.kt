@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.PersonRemove
+import androidx.compose.material.icons.outlined.QueryStats
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -25,6 +26,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
@@ -52,6 +55,7 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.foodandart.R
 import com.example.foodandart.data.models.Theme
+import com.example.foodandart.ui.FoodAndArtRoute
 
 var expandMenu by mutableStateOf(false)
 var offsetX by mutableStateOf(0.dp)
@@ -67,7 +71,7 @@ fun ProfileScreen(
     viewModel: ProfileViewModel
 ) {
     LaunchedEffect(Unit) { viewModel.initialize(navController) }
-
+    viewModel.getUserInfo()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -76,11 +80,11 @@ fun ProfileScreen(
                     IconButton(onClick = { expandMenu = true }) {
                         Icon(Icons.Default.MoreVert, "Menu")
                     }
-                    Menu(viewModel)
+                    Menu(viewModel, navController)
                 }
             )
         }
-    ) {contentPadding ->
+    ) { contentPadding ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -127,7 +131,8 @@ fun UserInformation(viewModel: ProfileViewModel) {
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .size(150.dp),
-            alignment = Alignment.Center
+            alignment = Alignment.Center,
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
         )
     }
     OutlinedTextField(
@@ -139,7 +144,12 @@ fun UserInformation(viewModel: ProfileViewModel) {
         onValueChange = { },
         readOnly = true,
         placeholder = { Text(stringResource(R.string.name)) },
-        leadingIcon = { Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "Name") },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = "Name"
+            )
+        },
     )
     OutlinedTextField(
         singleLine = true,
@@ -147,7 +157,7 @@ fun UserInformation(viewModel: ProfileViewModel) {
             .fillMaxWidth()
             .padding(16.dp, 4.dp),
         value = viewModel.city,
-        onValueChange = {  },
+        onValueChange = { },
         readOnly = true,
         placeholder = { Text(stringResource(R.string.city)) },
         leadingIcon = {
@@ -160,7 +170,7 @@ fun UserInformation(viewModel: ProfileViewModel) {
 }
 
 @Composable
-fun Menu(viewModel: ProfileViewModel) {
+fun Menu(viewModel: ProfileViewModel, navController: NavController) {
     val density = LocalDensity.current
     DropdownMenu(
         expanded = expandMenu,
@@ -202,7 +212,22 @@ fun Menu(viewModel: ProfileViewModel) {
         }
         HorizontalDivider()
         DropdownMenuItem(
-            text = { Text(text = stringResource(id = R.string.sign_out), color = Color.Red )},
+            text = { Text(stringResource(id = R.string.charts)) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Outlined.QueryStats,
+                    contentDescription = "Delete Account"
+                )
+            },
+            onClick = {
+                expandMenu = false
+                navController.navigate(FoodAndArtRoute.Charts.route)
+
+            }
+        )
+        HorizontalDivider()
+        DropdownMenuItem(
+            text = { Text(text = stringResource(id = R.string.sign_out), color = Color.Red) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.ExitToApp,
@@ -227,6 +252,7 @@ fun Menu(viewModel: ProfileViewModel) {
                 expandMenu = false
                 showRemoveAccDialog = true
             })
+
     }
 }
 

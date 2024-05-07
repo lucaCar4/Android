@@ -170,11 +170,5 @@ fun UserExtraData(viewModel: SignUpViewModel) {
                 contentDescription = "Email"
             )
         },
-        isError = !viewModel.existDestination,
-        supportingText = {
-            if (!viewModel.existDestination) {
-                Text(text = stringResource(id = R.string.error_city))
-            }
-        },
     )
 }

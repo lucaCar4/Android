@@ -23,6 +23,8 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.foodandart.ui.screens.cardDetails.CardDetailsScreen
 import com.example.foodandart.ui.screens.cardDetails.CardDetailsViewModel
+import com.example.foodandart.ui.screens.charts.ChartsScreen
+import com.example.foodandart.ui.screens.charts.ChartsViewModel
 import com.example.foodandart.ui.screens.favorites.FavoritesViewModel
 import com.example.foodandart.ui.screens.home.HomeViewModel
 import com.example.foodandart.ui.screens.login.sign_in.SignInScreen
@@ -83,6 +85,14 @@ sealed class FoodAndArtRoute(
         listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
+    data object Charts : FoodAndArtRoute(
+        "Charts",
+        "Charts",
+        null,
+        null,
+        listOf(navArgument("cardId") { type = NavType.StringType })
+    )
+
     data object SignIn : FoodAndArtRoute(
         "SignIn",
         "SignIn",
@@ -100,7 +110,6 @@ sealed class FoodAndArtRoute(
     ){
         fun buildRoute(cardId: String) = "cards/$cardId"
     }
-
 
     data object SignUp : FoodAndArtRoute(
         "SignUp",
@@ -168,6 +177,13 @@ fun FoodAndArtNavGraph(
         with(FoodAndArtRoute.Profile) {
             composable(route) {
                 ProfileScreen(navController, profileViewModel)
+            }
+        }
+
+        with(FoodAndArtRoute.Charts) {
+            composable(route) {
+                val chartsViewModel = koinViewModel<ChartsViewModel>()
+                ChartsScreen(navController, chartsViewModel)
             }
         }
 
