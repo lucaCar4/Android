@@ -9,8 +9,8 @@ import com.example.foodandart.data.repositories.BasketRepository
 import com.example.foodandart.data.repositories.HomeChipsRepository
 import com.example.foodandart.data.repositories.ThemeRepository
 import com.example.foodandart.service.AccountService
+import com.example.foodandart.ui.MainViewModel
 import com.example.foodandart.ui.screens.cardDetails.CardDetailsViewModel
-import com.example.foodandart.ui.screens.charts.ChartsViewModel
 import com.example.foodandart.ui.screens.favorites.FavoritesViewModel
 import com.example.foodandart.ui.screens.home.HomeViewModel
 import com.example.foodandart.ui.screens.login.sign_in.SignInViewModel
@@ -64,8 +64,7 @@ val appModule = module {
 
     viewModel { PurchasesViewModel() }
 
-    viewModel { ChartsViewModel() }
-
+    viewModel { MainViewModel() }
     /*HTTP REQUESTS*/
     single {
         HttpClient {
