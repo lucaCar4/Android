@@ -1,5 +1,6 @@
 package com.example.foodandart.ui.screens.shopping_cart
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -51,6 +52,9 @@ fun BasketScreen(
     viewModel: BasketViewModel
 ) {
     val state by viewModel.state.collectAsState()
+    viewModel.selectedCards.forEach {
+        viewModel.updateLimit(it.key)
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -97,6 +101,7 @@ fun BasketList(viewModel: BasketViewModel, state: BasketState) {
     val ctx = LocalContext.current
     LazyColumn {
         items(state.basket) { elem ->
+            Log.d("Basket", elem.toString())
             val card = viewModel.selectedCards[elem.card]
             val images = card?.get("images") as? List<String>
             val image = getURIFromPath(images?.get(0) ?: "")

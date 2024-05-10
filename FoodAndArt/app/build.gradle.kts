@@ -4,7 +4,6 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.devtools.ksp")
     id("kotlin-kapt")
-
     kotlin("plugin.serialization") version "1.9.0"
 }
 
@@ -85,14 +84,14 @@ dependencies {
 
     /*Firebase*/
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-messaging")
     implementation("com.firebaseui:firebase-ui-storage:7.2.0")
-    implementation("io.coil-kt:coil-compose:2.3.0")
     implementation("com.firebaseui:firebase-ui-auth:7.2.0")
-    implementation("com.google.firebase:firebase-appcheck:17.1.0")
 
+    implementation("io.coil-kt:coil-compose:2.3.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-compiler:2.44")
@@ -119,4 +118,5 @@ dependencies {
     /*OpenStreetMap*/
     implementation("org.osmdroid:osmdroid-android:6.1.10")
     implementation("org.osmdroid:osmdroid-mapsforge:6.1.10")
+
 }

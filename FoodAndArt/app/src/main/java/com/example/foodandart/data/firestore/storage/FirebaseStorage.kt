@@ -23,6 +23,8 @@ fun getURIFromPath(path: String): Uri {
             uriRef = uri
         }.addOnFailureListener {_ ->
         }
+    } else {
+        return Uri.EMPTY
     }
     return uriRef
 }

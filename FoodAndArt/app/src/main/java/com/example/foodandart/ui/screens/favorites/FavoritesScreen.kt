@@ -1,27 +1,18 @@
 package com.example.foodandart.ui.screens.favorites
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,13 +28,14 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.foodandart.data.firestore.storage.getURIFromPath
-import com.google.firebase.firestore.DocumentSnapshot
+import com.example.foodandart.ui.FoodAndArtRoute
+import com.example.foodandart.ui.screens.home.showCards
+import java.util.Objects
 
 @Composable
 fun FavoritesScreen(
@@ -52,24 +43,28 @@ fun FavoritesScreen(
     viewModel: FavoritesViewModel
 ) {
     Column {
-        Cards(vm = viewModel )
+        Cards(viewModel = viewModel, navController = navController)
     }
 }
 
 @Composable
-fun Cards(vm: FavoritesViewModel) {
-    LazyColumn (
+fun Cards(viewModel: FavoritesViewModel, navController: NavController) {
+    LazyColumn(
         modifier = Modifier.padding(16.dp)
     ) {
-        items(vm.favorites){ document -> FoodAndArtCard(document, vm) }
+        val cards = viewModel.cards.filter { viewModel.favorites.contains(it.key) }
+        for ((key, value) in cards) {
+            item {
+                FoodAndArtCard(id = key, data = value, viewModel = viewModel, navController = navController)
+            }
+        }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FoodAndArtCard(document: DocumentSnapshot, viewModel: FavoritesViewModel) {
+fun FoodAndArtCard(id: String, data: Map<String, Any>, viewModel: FavoritesViewModel, navController: NavController) {
     val ctx = LocalContext.current
-    val images = document.data?.get("images") as? List<String>
+    val images = data["images"] as? List<String>
     val image = getURIFromPath(images?.get(0) ?: "")
     Card(
         modifier = Modifier
@@ -78,7 +73,7 @@ fun FoodAndArtCard(document: DocumentSnapshot, viewModel: FavoritesViewModel) {
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
         ),
-        onClick = {  }
+        onClick = { navController.navigate(FoodAndArtRoute.CardDetails.buildRoute(id)) }
 
     ) {
         Column(
@@ -99,10 +94,10 @@ fun FoodAndArtCard(document: DocumentSnapshot, viewModel: FavoritesViewModel) {
                         .fillMaxSize()
                         .size(200.dp)
                 )
-                val tint by remember { mutableStateOf(Color.Yellow)}
+                val tint by remember { mutableStateOf(Color.Yellow) }
                 IconButton(
                     onClick = {
-                        viewModel.removeFavorites(document.id)
+                        viewModel.removeFavorites(id)
                     },
                     modifier = Modifier
                         .align(Alignment.TopEnd)
@@ -114,14 +109,12 @@ fun FoodAndArtCard(document: DocumentSnapshot, viewModel: FavoritesViewModel) {
                 }
             }
             Spacer(Modifier.size(8.dp))
-            document.data?.get("title")?.let {
-                Text(
-                    it.toString(),
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center
-                )
-            }
+            Text(
+                data["title"].toString(),
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

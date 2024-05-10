@@ -63,6 +63,7 @@ import com.example.foodandart.ui.screens.cardDetails.map.Map
 fun CardDetailsScreen(navController: NavController, id: String, viewModel: CardDetailsViewModel) {
     val ctx = LocalContext.current
     viewModel.setDocument(id)
+
     if (viewModel.document != null) {
         Scaffold(
             floatingActionButton = {
@@ -83,7 +84,7 @@ fun CardDetailsScreen(navController: NavController, id: String, viewModel: CardD
                 TopAppBar(
                     title = {
                         Text(
-                            text = viewModel.document!!.data?.get("title").toString(),
+                            text = viewModel.document?.get("title").toString(),
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth(),
                             )
@@ -105,7 +106,7 @@ fun CardDetailsScreen(navController: NavController, id: String, viewModel: CardD
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val imagesPath = viewModel.document!!.data?.get("images") as? List<String>
+                val imagesPath = viewModel.document?.get("images") as? List<String>
                 if (imagesPath != null) {
                     LazyRow {
                         items(imagesPath) {
@@ -127,7 +128,7 @@ fun CardDetailsScreen(navController: NavController, id: String, viewModel: CardD
                 Spacer(modifier = Modifier.padding(4.dp))
                 Text(text = stringResource(id = R.string.description), fontSize = 25.sp)
                 Text(
-                    text = viewModel.document!!.data?.get("description").toString(),
+                    text = viewModel.document?.get("description").toString(),
                     fontSize = 18.sp,
                     textAlign = TextAlign.Left,
                     modifier = Modifier.padding(16.dp)
@@ -158,6 +159,7 @@ fun DateChooser(viewModel: CardDetailsViewModel) {
     var expanded by remember { mutableStateOf(false) }
     if (!viewModel.dates.isEmpty()) {
         Log.d("Datee", viewModel.selectedDate)
+        viewModel.getLimit()
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = {
@@ -242,7 +244,7 @@ fun BuyCard(viewModel: CardDetailsViewModel) {
                 checkExistingCard(viewModel = viewModel, state = state)
                 viewModel.actions.addElem(
                     BasketElem(
-                        card = viewModel.document?.id ?: "" ,
+                        card =  viewModel.id,
                         date = viewModel.selectedDate,
                         quantity = viewModel.quantity
                     )
@@ -261,7 +263,7 @@ private fun checkExistingCard(state: BasketState, viewModel: CardDetailsViewMode
     val elems = mutableListOf<BasketElem>()
     state.basket.forEach {elem ->
         if (viewModel.document != null) {
-            if (elem.card == viewModel.document!!.id && viewModel.selectedDate == elem.date )  {
+            if (elem.card == viewModel.id && viewModel.selectedDate == elem.date )  {
                 elems.add(elem)
             }
         }

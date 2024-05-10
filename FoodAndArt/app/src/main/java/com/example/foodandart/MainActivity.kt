@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.foodandart.data.models.Theme
 import com.example.foodandart.ui.FoodAndArtNavGraph
 import com.example.foodandart.ui.FoodAndArtRoute
+import com.example.foodandart.ui.MainViewModel
 import com.example.foodandart.ui.composable.NavBar
 import com.example.foodandart.ui.screens.profile.ProfileViewModel
 import com.example.foodart.ui.theme.FoodArtTheme
@@ -33,6 +34,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         Configuration.getInstance().userAgentValue = "foodandart_osmdroid"
         setContent {
+            koinViewModel<MainViewModel>()
             val navController = rememberNavController()
             val viewModel = koinViewModel<ProfileViewModel>()
             val state = viewModel.state

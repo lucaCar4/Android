@@ -52,12 +52,12 @@ fun SignUpScreen(
     if (viewModel.isSignUp) {
         SignUp(viewModel = viewModel, navController = navController)
     } else {
-        WaitForSignUp(viewModel = viewModel)
+        WaitForSignUp()
     }
     
 }
 @Composable
-fun WaitForSignUp(viewModel: SignUpViewModel) {
+fun WaitForSignUp() {
     Column(
         modifier =
         Modifier

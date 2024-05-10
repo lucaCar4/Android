@@ -37,3 +37,30 @@ docData = hashMapOf(
 )
 db.collection("cardsen").add(docData)
 */
+
+
+/*
+fun getCardsWithFilters(
+    restaurants: Boolean,
+    museums: Boolean,
+    packages: Boolean,
+): MutableList<Query> {
+    val db = Firebase.firestore
+    val collection = "cards" + Locale.current.language
+    val query = mutableListOf<Query>()
+    if (restaurants) {
+        query.add(db.collection(collection).whereEqualTo("type", "Restaurant"))
+    }
+    if (museums) {
+        query.add(db.collection(collection).whereEqualTo("type", "Museum"))
+        Log.d(collection, "museums")
+    }
+    if (packages) {
+        query.add(db.collection(collection).whereEqualTo("type", "Package"))
+    }
+    if (query.isEmpty()) {
+        query.add(db.collection(collection))
+    }
+    return query
+}
+ */

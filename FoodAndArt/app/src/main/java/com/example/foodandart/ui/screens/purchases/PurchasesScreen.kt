@@ -41,6 +41,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -66,6 +67,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
+import java.util.Objects
 
 val snackbarHostState = SnackbarHostState()
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,8 +76,8 @@ fun PurchasesScreen(navController: NavController, viewModel: PurchasesViewModel)
     var state by remember { mutableStateOf(0) }
     val elms = listOf(stringResource(id = R.string.events), stringResource(id = R.string.history))
     val icons = listOf(Icons.Outlined.Event, Icons.Outlined.History)
-    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) {
-        Column {
+    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { contentPadding ->
+        Column(modifier = Modifier.padding(contentPadding)) {
             PrimaryTabRow(selectedTabIndex = state) {
                 elms.forEachIndexed { index, title ->
                     Tab(
@@ -86,20 +88,20 @@ fun PurchasesScreen(navController: NavController, viewModel: PurchasesViewModel)
                     )
                 }
             }
-            var purchases = viewModel.purchases
+            var purchases = viewModel.purchases.toList()
             if (state == 0) {
-                purchases = purchases.filter {
+                purchases = purchases.toList().filter {
                     LocalDate.parse(
-                        it.data?.get("date").toString(),
+                        it?.get("date").toString(),
                         DateTimeFormatter.ofPattern("dd/MM/yyyy")
                     ) >= LocalDate.now()
                 }
-                purchases = purchases.sortedBy {
-                    LocalDate.parse(
-                        it.data?.get("date").toString(),
-                        DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                    )
-                }
+            }
+            purchases = purchases.sortedBy {
+                LocalDate.parse(
+                    it?.get("date").toString(),
+                    DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                )
             }
             Events(purchases = purchases, viewModel = viewModel, state)
         }
@@ -107,19 +109,19 @@ fun PurchasesScreen(navController: NavController, viewModel: PurchasesViewModel)
 }
 
 @Composable
-fun Events(purchases: List<DocumentSnapshot>, viewModel: PurchasesViewModel, state: Int) {
+fun Events(purchases: List<Map<String, Any>>, viewModel: PurchasesViewModel, state: Int) {
     val ctx = LocalContext.current
 
     LazyColumn {
         items(purchases) { purchase ->
-            val card = viewModel.selectedCards[purchase.data?.get("card")]
+            val card = viewModel.selectedCards[purchase["card"].toString()]
             val images = card?.get("images") as? List<String>
             val image = getURIFromPath(images?.get(0) ?: "")
             ListItem(
                 headlineContent = { Text(card?.get("title").toString()) },
                 supportingContent = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = purchase.data?.get("date").toString())
+                        Text(text = purchase["date"].toString())
                         if (state == 0) {
                             Spacer(modifier = Modifier.padding(8.dp))
                             AddEvent(viewModel = viewModel, purchase, card)
@@ -144,7 +146,7 @@ fun Events(purchases: List<DocumentSnapshot>, viewModel: PurchasesViewModel, sta
 }
 
 @Composable
-fun AddEvent(viewModel: PurchasesViewModel, purchases: DocumentSnapshot, card: Map<String, Any>?) {
+fun AddEvent(viewModel: PurchasesViewModel, purchases: Map<String, Any>, card: Map<String, Any>?) {
     val ctx = LocalContext.current
     val osmDataSource = koinInject<OSMDataSource>()
     val coroutineScope = rememberCoroutineScope()
@@ -193,7 +195,7 @@ fun AddEvent(viewModel: PurchasesViewModel, purchases: DocumentSnapshot, card: M
 @Composable
 fun showPermission(
     viewModel: PurchasesViewModel,
-    purchases: DocumentSnapshot,
+    purchases: Map<String, Any>,
     card: Map<String, Any>?,
     osmDataSource: OSMDataSource,
     scope: CoroutineScope
@@ -247,7 +249,7 @@ fun showPermission(
 
 fun calendar(
     ctx: Context,
-    purchase: DocumentSnapshot,
+    purchase: Map<String, Any>,
     card: Map<String, Any>?,
     osmDataSource: OSMDataSource,
     scope: CoroutineScope
@@ -277,7 +279,7 @@ fun calendar(
             if (isOnline()) {
                 val res = osmDataSource.getPalaceName(coordinates.first())
                 val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                val date: Date = dateFormat.parse(purchase.data?.get("date").toString()) ?: Date()
+                val date: Date = dateFormat.parse(purchase["date"].toString()) ?: Date()
                 Log.d("Dataaaa", date.toString())
                 val startTimeInMillis = date.time
                 val intent = Intent(Intent.ACTION_INSERT)
@@ -287,9 +289,7 @@ fun calendar(
                     .putExtra(CalendarContract.Events.TITLE, card["title"].toString())
                     .putExtra(
                         CalendarContract.Events.DESCRIPTION,
-                        ctx.getString(R.string.calendar_description_start) + " " + purchase.data?.get(
-                            "quantity"
-                        ).toString() + " " + ctx.getString(R.string.calendar_description_end)
+                        ctx.getString(R.string.calendar_description_start) + " " + purchase["quantity"].toString() + " " + ctx.getString(R.string.calendar_description_end)
                     )
                     .putExtra(CalendarContract.Events.EVENT_LOCATION, res.displayName)
 

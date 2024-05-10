@@ -21,10 +21,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Objects
 
 class CardDetailsViewModel(private val repository: BasketRepository) : ViewModel() {
 
-    var document by mutableStateOf<DocumentSnapshot?>(null)
+    var document by mutableStateOf<Map<String, Any>?>(null)
+    var id by mutableStateOf("")
     var showMap by mutableStateOf(false)
     var selectedDate by mutableStateOf("")
     var dates = mutableStateMapOf<String, String>()
@@ -54,12 +56,13 @@ class CardDetailsViewModel(private val repository: BasketRepository) : ViewModel
     fun setDocument(cardId: String) {
         viewModelScope.launch {
             document = getCardById(cardId)
+            id = cardId
             updateDates()
         }
     }
 
     private fun updateDates() {
-        var docDates = document?.data?.get("dates") as? Map<String, String>
+        var docDates = document?.get("dates") as? Map<String, String>
         if (!docDates.isNullOrEmpty()) {
             Log.d("Data", docDates.toString())
             docDates = docDates.filterKeys {
@@ -80,7 +83,7 @@ class CardDetailsViewModel(private val repository: BasketRepository) : ViewModel
                 docDates.forEach { (key, value) ->
                     dates[key] = value
                 }
-                getLimit()
+
             }
         }
     }

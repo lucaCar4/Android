@@ -1,42 +1,38 @@
 package com.example.foodandart.data.firestore.cloud_database
 
+import android.content.ContentValues
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.intl.Locale
 import com.example.foodandart.accountService
 import com.example.foodandart.data.models.BasketState
+import com.example.foodandart.languages
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.GeoPoint
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
+import java.util.Objects
 
-val languages = listOf("it", "en")
-fun getCardsWithFilters(
-    restaurants: Boolean,
-    museums: Boolean,
-    packages: Boolean,
-): MutableList<Query> {
-    val db = Firebase.firestore
-    val collection = "cards" + Locale.current.language
-    val query = mutableListOf<Query>()
-    if (restaurants) {
-        query.add(db.collection(collection).whereEqualTo("type", "Restaurant"))
-    }
-    if (museums) {
-        query.add(db.collection(collection).whereEqualTo("type", "Museum"))
-        Log.d(collection, "museums")
-    }
-    if (packages) {
-        query.add(db.collection(collection).whereEqualTo("type", "Package"))
-    }
-    if (query.isEmpty()) {
-        query.add(db.collection(collection))
-    }
-    return query
-}
+
+val cards = mutableStateMapOf<String, Map<String, Any>>()
+var favorites = mutableStateListOf<String>()
+var purchases = mutableStateListOf<Map<String, Any>>()
+var userData by mutableStateOf<DocumentSnapshot?>(null)
+
+private var cardsUpdate: Job? = null
+private var userUpdate: Job? = null
+private var purchasesUpdate: Job? = null
+
 
 fun removeUserFiles() {
     val db = Firebase.firestore
@@ -71,35 +67,12 @@ suspend fun addRemoveFavoriteCard(cardId: String) {
     }.await()
 }
 
-
-suspend fun getFavoritesCards(favoritesId: List<String>): MutableList<DocumentSnapshot> {
-    val db = Firebase.firestore
-    val collection = "cards" + Locale.current.language
-    val favoritesCards = mutableListOf<DocumentSnapshot>()
-    for (id in favoritesId) {
-        try {
-            val document = db.collection(collection).document(id).get().await()
-            favoritesCards.add(document)
-        } catch (_: Exception) {
-        }
-    }
-    return favoritesCards
+fun userInfo(): DocumentSnapshot? {
+    return userData
 }
 
-suspend fun userInfo(): DocumentSnapshot? {
-    val db = Firebase.firestore
-    return if (accountService.currentUserId != "") {
-        Log.d("User", "User is ${accountService.currentUserId}")
-        db.collection("users").document(accountService.currentUserId).get().await()
-    } else {
-        null
-    }
-}
-
-suspend fun getCardById(cardId: String): DocumentSnapshot? {
-    val db = Firebase.firestore
-    val collection = "cards" + Locale.current.language
-    return db.collection(collection).document(cardId).get().await()
+fun getCardById(cardId: String): Map<String, Any>? {
+    return cards[cardId]
 }
 
 suspend fun addPurchase(basket: BasketState) {
@@ -129,12 +102,74 @@ suspend fun addPurchase(basket: BasketState) {
     }
 }
 
-suspend fun getPurchases(): QuerySnapshot? {
-    val db = Firebase.firestore
-    if (accountService.currentUserId != "") {
-        return db.collection("users").document(accountService.currentUserId).collection("purchases")
-            .get().await()
+fun purchasesChangeListener() {
+    purchasesUpdate = CoroutineScope(Dispatchers.IO).launch {
+        val db = Firebase.firestore
+        if (accountService.currentUserId != "") {
+            db.collection("users").document(accountService.currentUserId)
+                .collection("purchases")
+                .addSnapshotListener { snapshot, _ ->
+                    purchases.clear()
+                    snapshot?.documents?.forEach { document ->
+                        val data = document.data as? Map<String, Any>
+                        if (data != null) {
+                            purchases.add(data)
+                        }
+                    }
+                }
+        }
     }
-    return null
+}
+
+
+fun userDataChangeListener() {
+    userUpdate = CoroutineScope(Dispatchers.IO).launch {
+        val db = Firebase.firestore
+        db.collection("users").document(accountService.currentUserId)
+            .addSnapshotListener { snapshot, e ->
+                if (snapshot != null && snapshot.data != null) {
+                    Log.d("Favorites", "UpdateVav")
+                    val fav = snapshot.data?.get("favorites") as? List<String>
+                    if (fav != null && favorites != fav) {
+                        favorites.addAll(fav.subtract(favorites))
+                        favorites.retainAll(fav)
+                    }
+                }
+            }
+    }
+}
+
+fun cardsUpdate() {
+    cardsUpdate = CoroutineScope(Dispatchers.IO).launch {
+        val db = Firebase.firestore
+        val docRef = db.collection("cards" + Locale.current.language)
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(ContentValues.TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
+            snapshot?.documents?.forEach { document ->
+                val docId = document.id
+                Log.d("MainViewModel", "dcccc")
+                document.reference.addSnapshotListener { docSnapshot, docError ->
+                    if (docSnapshot != null && docSnapshot.exists()) {
+                        cards[docId] = docSnapshot.data as Map<String, Objects>
+                    }
+                }
+            }
+        }
+    }
+}
+
+fun getCards(): MutableMap<String, Map<String, Any>> {
+    return cards
+}
+
+fun getFavorites(): List<String> {
+    return favorites
+}
+
+fun getPurchases(): List<Map<String, Any>> {
+    return purchases
 }
 

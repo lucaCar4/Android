@@ -24,7 +24,6 @@ import androidx.navigation.navArgument
 import com.example.foodandart.ui.screens.cardDetails.CardDetailsScreen
 import com.example.foodandart.ui.screens.cardDetails.CardDetailsViewModel
 import com.example.foodandart.ui.screens.charts.ChartsScreen
-import com.example.foodandart.ui.screens.charts.ChartsViewModel
 import com.example.foodandart.ui.screens.favorites.FavoritesViewModel
 import com.example.foodandart.ui.screens.home.HomeViewModel
 import com.example.foodandart.ui.screens.login.sign_in.SignInScreen
@@ -182,8 +181,7 @@ fun FoodAndArtNavGraph(
 
         with(FoodAndArtRoute.Charts) {
             composable(route) {
-                val chartsViewModel = koinViewModel<ChartsViewModel>()
-                ChartsScreen(navController, chartsViewModel)
+                ChartsScreen(navController)
             }
         }
 

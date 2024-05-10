@@ -304,6 +304,3 @@ fun SignOutAlert(viewModel: ProfileViewModel) {
         )
     }
 }
-
-
-

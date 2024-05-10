@@ -5,6 +5,9 @@
 
     <!-- Charts -->
         <string name="charts">Stats</string>
+        <string name="voyages">voyages</string>
+        <string name="bar_description">Trips taken this year</string>
+
 
     <!-- Permission -->
         <string name="grant">Grant</string>
