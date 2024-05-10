@@ -84,16 +84,15 @@ suspend fun addPurchase(basket: BasketState) {
             "purchase_date" to LocalDate.now().toString()
         )
         val db = Firebase.firestore
-        languages.forEach {
-            val document = db.collection("cards$it").document(elem.card).get().await()
-            val dates = document.data?.get("dates") as? MutableMap<String, String>
-            if (!dates.isNullOrEmpty()) {
-                val limit = dates[elem.date]?.split('/')
-                if (limit != null && limit.size == 2) {
-                    dates[elem.date] = "${limit[0].toInt() + elem.quantity}/${limit[1]}"
+        languages.forEach { it ->
+            val document = db.collection("cards$it").document(elem.card).collection("dates").get().await()
+            document.documents.forEach {document ->
+                if (document.data?.get("date").toString() == elem.date) {
+                    val oldLimit = document.data?.get("booked").toString().toInt()
+                    db.collection("cards$it").document(elem.card).collection("dates").document(document.id).update("booked", elem.quantity+oldLimit).await()
                 }
-                db.collection("cards$it").document(elem.card).update("dates", dates).await()
             }
+
         }
         if (accountService.currentUserId != "") {
             db.collection("users").document(accountService.currentUserId).collection("purchases")
@@ -134,6 +133,7 @@ fun userDataChangeListener() {
                         favorites.addAll(fav.subtract(favorites))
                         favorites.retainAll(fav)
                     }
+                    userData = snapshot
                 }
             }
     }
@@ -153,11 +153,25 @@ fun cardsUpdate() {
                 Log.d("MainViewModel", "dcccc")
                 document.reference.addSnapshotListener { docSnapshot, docError ->
                     if (docSnapshot != null && docSnapshot.exists()) {
-                        cards[docId] = docSnapshot.data as Map<String, Objects>
+                        cards[docId] = docSnapshot.data as Map<String, Any>
                     }
                 }
             }
         }
+        /*
+        cards.forEach {card ->
+            docRef.document(card.key).collection("dates").addSnapshotListener { snapshot, _ ->
+                snapshot?.documents?.forEach { document ->
+                    val docId = document.id
+                    document.reference.addSnapshotListener { docSnapshot, _ ->
+                        if (docSnapshot != null && docSnapshot.exists()) {
+                            dates[card.key] = docSnapshot.data as Map<String, Any>
+                        }
+                    }
+                }
+            }
+        }
+         */
     }
 }
 
@@ -172,4 +186,5 @@ fun getFavorites(): List<String> {
 fun getPurchases(): List<Map<String, Any>> {
     return purchases
 }
+
 

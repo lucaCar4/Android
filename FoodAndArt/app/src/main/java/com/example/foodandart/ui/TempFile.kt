@@ -64,3 +64,18 @@ fun getCardsWithFilters(
     return query
 }
  */
+
+/*
+LaunchedEffect(key1 = true) {
+        val db = Firebase.firestore
+        var docData = hashMapOf(
+            "date" to "30/06/2024",
+            "availability" to 30,
+            "booked" to 0,
+        )
+        getCards().forEach {
+            db.collection("cardsit").document(it.key).collection("dates").add(docData)
+            db.collection("cardsen").document(it.key).collection("dates").add(docData)
+        }
+    }
+ */

@@ -1,0 +1,9 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.example.foodandart",
+      "sha256_cert_fingerprints":
+      ["09:07:BA:64:48:79:3C:78:BE:E7:77:C6:19:86:61:8B:A7:39:99:94:FB:ED:FD:45:2F:06:CC:86:2A:A8:AC:9F"]
+    }
+  }]

@@ -35,6 +35,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,9 +56,13 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.foodandart.R
 import com.example.foodandart.data.database.BasketElem
+import com.example.foodandart.data.firestore.cloud_database.getCards
 import com.example.foodandart.data.firestore.storage.getURIFromPath
 import com.example.foodandart.data.models.BasketState
 import com.example.foodandart.ui.screens.cardDetails.map.Map
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardDetailsScreen(navController: NavController, id: String, viewModel: CardDetailsViewModel) {
@@ -185,11 +190,11 @@ fun DateChooser(viewModel: CardDetailsViewModel) {
                     expanded = false
                 }
             ) {
-                viewModel.dates.keys.forEach { selectionOption ->
+                viewModel.availableDates.forEach { (key, value) ->
                     DropdownMenuItem(
-                        text = { Text(text = selectionOption) },
+                        text = { Text(text = value["date"].toString()) },
                         onClick = {
-                            viewModel.selectedDate = selectionOption
+                            viewModel.selectedDate = value["date"].toString()
                             viewModel.getLimit()
                             Log.d("Datee", viewModel.selectedDate)
                             expanded = false
