@@ -1,5 +1,6 @@
 package com.example.foodandart
 
+import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -12,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -20,20 +22,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.foodandart.data.models.Theme
+import com.example.foodandart.service.NotificationService
 import com.example.foodandart.ui.FoodAndArtNavGraph
 import com.example.foodandart.ui.FoodAndArtRoute
 import com.example.foodandart.ui.MainViewModel
 import com.example.foodandart.ui.composable.NavBar
+import com.example.foodandart.ui.screens.login.sign_up.utils.rememberPermission
 import com.example.foodandart.ui.screens.profile.ProfileViewModel
 import com.example.foodart.ui.theme.FoodArtTheme
 import org.koin.androidx.compose.koinViewModel
 import org.osmdroid.config.Configuration
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Configuration.getInstance().userAgentValue = "foodandart_osmdroid"
         setContent {
+            val postNotificationPermission = rememberPermission(permission = Manifest.permission.POST_NOTIFICATIONS)
+            notificationService = NotificationService(context = this)
+            LaunchedEffect(key1 = true) {
+                if(!postNotificationPermission.status.isGranted) {
+                    postNotificationPermission.launchPermissionRequest()
+                }
+            }
             koinViewModel<MainViewModel>()
             val navController = rememberNavController()
             val viewModel = koinViewModel<ProfileViewModel>()

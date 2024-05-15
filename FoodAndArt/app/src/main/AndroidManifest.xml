@@ -2,17 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-feature android:name="android.hardware.camera.any"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera.any" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -20,12 +21,13 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
+
     <queries>
         <intent>
             <action android:name="android.settings.APPLICATION_DETAILS_SETTINGS" />
         </intent>
         <intent>
-            <action android:name="android.settings.WIRELESS_SETTINGS"/>
+            <action android:name="android.settings.WIRELESS_SETTINGS" />
         </intent>
         <intent>
             <action android:name="android.settings.LOCATION_SOURCE_SETTINGS" />
@@ -36,9 +38,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/foodandart"
+        android:icon="@mipmap/foodandart"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/foodandart"
+        android:roundIcon="@mipmap/foodandart_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodAndArt"
         tools:targetApi="31">
@@ -52,6 +54,41 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="foodandart-d0115.web.app" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:host="foodandart-d0115.web.app" />
+                <data android:path="/card" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Specifica il tuo schema personalizzato -->
+                <data android:scheme="foodandart" android:host="open" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Specifica il tuo schema personalizzato -->
+                <data android:scheme="foodandart" android:host="card" />
+            </intent-filter>
+
         </activity>
 
         <provider

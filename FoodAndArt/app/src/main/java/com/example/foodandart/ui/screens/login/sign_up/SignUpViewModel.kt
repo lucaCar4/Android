@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.foodandart.data.firestore.cloud_database.addUserDocument
 import com.example.foodandart.data.firestore.storage.updateUserImage
+import com.example.foodandart.notificationService
 import com.google.firebase.firestore.GeoPoint
 
 class SignUpViewModel( private val accountService: AccountService) : ViewModel() {
@@ -83,6 +84,7 @@ class SignUpViewModel( private val accountService: AccountService) : ViewModel()
                         updateUserImage(accountService.currentUserId, image)
                     }
                     addUserDocument(name, cityGeoPoint, city)
+                    notificationService?.showWelcomeNotification()
                     navController.navigate(FoodAndArtRoute.Home.route) {
                         navController.popBackStack()
                     }

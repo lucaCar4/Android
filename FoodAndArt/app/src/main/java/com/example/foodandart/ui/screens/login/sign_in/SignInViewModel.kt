@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.example.foodandart.notificationService
 import com.example.foodandart.service.AccountService
 import com.example.foodandart.ui.FoodAndArtRoute
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,6 +38,7 @@ class SignInViewModel(
                 navController.navigate(FoodAndArtRoute.Home.route) {
                     navController.popBackStack()
                 }
+                notificationService?.showWelcomeBackNotification()
             } else {
                 validate(res)
             }
