@@ -1,5 +1,6 @@
 package com.example.foodandart.ui
 
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -19,8 +20,10 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.example.foodandart.ui.screens.cardDetails.CardDetailsScreen
 import com.example.foodandart.ui.screens.cardDetails.CardDetailsViewModel
 import com.example.foodandart.ui.screens.charts.ChartsScreen
@@ -44,6 +47,7 @@ sealed class FoodAndArtRoute(
     val title: String,
     val navIcon: ImageVector?,
     val navIconSelected: ImageVector?,
+    val navLinks: List<NavDeepLink> = emptyList(),
     val arguments: List<NamedNavArgument> = emptyList(),
 ) {
     data object Home : FoodAndArtRoute(
@@ -51,6 +55,7 @@ sealed class FoodAndArtRoute(
         "Home",
         Icons.Outlined.Home,
         Icons.Filled.Home,
+        emptyList(),
         listOf(navArgument("cardId") { type = NavType.StringType })
     )
     data object Basket : FoodAndArtRoute(
@@ -58,6 +63,7 @@ sealed class FoodAndArtRoute(
         "Basket",
         null,
         null,
+        emptyList(),
         listOf(navArgument("cardId") { type = NavType.StringType })
     )
     data object Purchases : FoodAndArtRoute(
@@ -65,6 +71,7 @@ sealed class FoodAndArtRoute(
         "Purchases",
         Icons.AutoMirrored.Outlined.ListAlt,
         Icons.AutoMirrored.Filled.ListAlt,
+        emptyList(),
         listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
@@ -73,6 +80,7 @@ sealed class FoodAndArtRoute(
         "Favorites",
         Icons.Outlined.StarBorder,
         Icons.Filled.Star,
+        emptyList(),
         listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
@@ -81,6 +89,7 @@ sealed class FoodAndArtRoute(
         "Profile",
         Icons.Outlined.AccountCircle,
         Icons.Filled.AccountCircle,
+        emptyList(),
         listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
@@ -89,6 +98,7 @@ sealed class FoodAndArtRoute(
         "Charts",
         null,
         null,
+        emptyList(),
         listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
@@ -97,6 +107,7 @@ sealed class FoodAndArtRoute(
         "SignIn",
         null,
         null,
+        emptyList(),
         listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
@@ -105,6 +116,16 @@ sealed class FoodAndArtRoute(
         "CardDetails",
         null,
         null,
+        listOf(
+            navDeepLink {
+                uriPattern = "https://foodandart-d0115.web.app/card/{cardId}"
+                action = Intent.ACTION_VIEW
+            },
+            navDeepLink {
+                uriPattern = "foodandart://card/{cardId}"
+                action = Intent.ACTION_VIEW
+            },
+        ),
         listOf(navArgument("cardId") { type = NavType.StringType })
     ){
         fun buildRoute(cardId: String) = "cards/$cardId"
@@ -115,6 +136,7 @@ sealed class FoodAndArtRoute(
         "SignUp",
         null,
         null,
+        emptyList(),
         listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
@@ -123,6 +145,7 @@ sealed class FoodAndArtRoute(
         "Splash",
         null,
         null,
+        emptyList(),
         listOf(navArgument("cardId") { type = NavType.StringType })
     )
 
@@ -207,7 +230,7 @@ fun FoodAndArtNavGraph(
         }
 
         with(FoodAndArtRoute.CardDetails) {
-            composable(route, arguments) { backStackEntry ->
+            composable(route, arguments, navLinks) { backStackEntry ->
                 val cardDetailsViewModel = koinViewModel<CardDetailsViewModel>()
                 CardDetailsScreen(navController ,backStackEntry.arguments?.getString("cardId") ?: "", cardDetailsViewModel)
             }
