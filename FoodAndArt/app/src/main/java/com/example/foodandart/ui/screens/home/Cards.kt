@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Image
@@ -32,17 +34,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.foodandart.data.firestore.cloud_database.cards
 import com.example.foodandart.data.firestore.storage.getURIFromPath
 import com.example.foodandart.ui.FoodAndArtRoute
-import java.util.Objects
+import com.example.foodandart.R
+
 var showCards = emptyMap<String, Map<String, Any>>()
+
 @Composable
 fun Cards(viewModel: HomeViewModel, navController: NavController) {
     filterCards(viewModel)
@@ -72,7 +77,7 @@ fun FoodAndArtCard(
             .fillMaxSize()
             .padding(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
         onClick = { navController.navigate(FoodAndArtRoute.CardDetails.buildRoute(id)) }
 
@@ -81,7 +86,7 @@ fun FoodAndArtCard(
             modifier = Modifier
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 if (image != Uri.EMPTY) {
@@ -95,7 +100,8 @@ fun FoodAndArtCard(
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier
                             .fillMaxSize()
-                            .size(200.dp)
+                            .height(150.dp)
+                            .width(200.dp)
                     )
                 } else {
                     Image(
@@ -104,7 +110,8 @@ fun FoodAndArtCard(
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier
                             .fillMaxSize()
-                            .size(200.dp)
+                            .height(150.dp)
+                            .width(200.dp)
                     )
                 }
                 var tint by remember { mutableStateOf(Color.LightGray) }
@@ -127,15 +134,25 @@ fun FoodAndArtCard(
                     Icon(Icons.Outlined.Star, contentDescription = "Favorites", tint = tint)
                 }
             }
-            Spacer(Modifier.size(8.dp))
-            data?.get("title")?.let {
-                Text(
-                    it.toString(),
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center
-                )
-            }
+            Spacer(modifier = Modifier.padding(8.dp))
+            Text(
+                text = data?.get("title").toString(),
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Left,
+                modifier = Modifier.padding(8.dp, 0.dp),
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 17.sp
+            )
+            Text(
+                text = "${data?.get("price")} ${stringResource(id = R.string.price)}",
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Left,
+                modifier = Modifier.padding(8.dp),
+                fontSize = 12.sp
+            )
+
         }
     }
 }
@@ -157,7 +174,8 @@ fun filterCards(viewModel: HomeViewModel) {
     }
 
     if (viewModel.position.toBoolean()) {
-        newCards = newCards.filter { viewModel.showCardByPosition().contains(it.key) }.toMutableMap()
+        newCards =
+            newCards.filter { viewModel.showCardByPosition().contains(it.key) }.toMutableMap()
     }
     showCards = newCards
     Log.d("Cards", "FIne")
