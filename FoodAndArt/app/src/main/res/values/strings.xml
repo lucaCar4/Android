@@ -3,6 +3,15 @@
     <string name="app_name">FoodAndArt</string>
     <string name="authenticate">Authenticate</string>
 
+    <!-- Home -->
+        <string name="price">euros per person</string>
+
+    <!-- Notification -->
+        <string name="welcome">Welcome!</string>
+        <string name="welcome_back">Welcome Back!</string>
+        <string name="new_date">New Date!</string>
+        <string name="new_date_text">There is a new date for</string>
+
     <!-- Charts -->
         <string name="charts">Stats</string>
         <string name="voyages">voyages</string>
@@ -82,9 +91,6 @@
             <string name="picture">Take a Picture</string>
             <string name="name">Name</string>
             <string name="city">City</string>
-            <string name="error_city">City does not exist</string>
-
-
 
     <!-- Sign In -->
             <string name="sign_in">Sign in</string>

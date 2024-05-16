@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.example.foodandart.R
 import com.example.foodandart.ui.FoodAndArtRoute
+import com.example.foodandart.ui.theme.darkLabel
 
 @Composable
 fun NavBar(
@@ -18,7 +19,7 @@ fun NavBar(
     currentRoute: FoodAndArtRoute
 ) {
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        containerColor = MaterialTheme.colorScheme.surface,
 
         ) {
         FoodAndArtRoute.mainRoutes.forEach { item ->
@@ -26,7 +27,7 @@ fun NavBar(
                 icon = {
                     if (item.title == currentRoute.title) {
                         if (item.navIconSelected != null) {
-                            Icon(item.navIconSelected, contentDescription = item.title, tint = Color.Yellow)
+                            Icon(item.navIconSelected, contentDescription = item.title, tint = darkLabel)
                         }
                     } else {
                         if (item.navIcon != null) {
@@ -36,7 +37,7 @@ fun NavBar(
                 },
                 label = {
                     if (item.title == currentRoute.title) {
-                        Text(getLabel(title = item.title), color = Color.Yellow)
+                        Text(getLabel(title = item.title), color = darkLabel)
                     } else {
                         Text(getLabel(title = item.title))
                     }

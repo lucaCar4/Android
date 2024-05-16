@@ -22,9 +22,13 @@ import androidx.compose.material.icons.outlined.Event
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -44,6 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -57,6 +62,7 @@ import com.example.foodandart.data.firestore.storage.getURIFromPath
 import com.example.foodandart.data.remote.OSMDataSource
 import com.example.foodandart.ui.screens.login.sign_up.utils.PermissionStatus
 import com.example.foodandart.ui.screens.login.sign_up.utils.rememberPermission
+import com.example.foodandart.ui.theme.darkLabel
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.CoroutineScope
@@ -78,7 +84,12 @@ fun PurchasesScreen(navController: NavController, viewModel: PurchasesViewModel)
     val icons = listOf(Icons.Outlined.Event, Icons.Outlined.History)
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { contentPadding ->
         Column(modifier = Modifier.padding(contentPadding)) {
-            PrimaryTabRow(selectedTabIndex = state) {
+            PrimaryTabRow(
+                selectedTabIndex = state,
+                contentColor = darkLabel,
+                containerColor = MaterialTheme.colorScheme.surface,
+                divider = {  }
+            ) {
                 elms.forEachIndexed { index, title ->
                     Tab(
                         selected = state == index,
@@ -99,7 +110,7 @@ fun PurchasesScreen(navController: NavController, viewModel: PurchasesViewModel)
             }
             purchases = purchases.sortedBy {
                 LocalDate.parse(
-                    it?.get("date").toString(),
+                    it["date"].toString(),
                     DateTimeFormatter.ofPattern("dd/MM/yyyy")
                 )
             }
@@ -112,7 +123,7 @@ fun PurchasesScreen(navController: NavController, viewModel: PurchasesViewModel)
 fun Events(purchases: List<Map<String, Any>>, viewModel: PurchasesViewModel, state: Int) {
     val ctx = LocalContext.current
 
-    LazyColumn {
+    LazyColumn(modifier = Modifier.padding(0.dp, 16.dp)) {
         items(purchases) { purchase ->
             val card = viewModel.selectedCards[purchase["card"].toString()]
             val images = card?.get("images") as? List<String>
@@ -139,7 +150,8 @@ fun Events(purchases: List<Map<String, Any>>, viewModel: PurchasesViewModel, sta
                         modifier = Modifier
                             .size(80.dp)
                     )
-                }
+                },
+                modifier = Modifier.padding(8.dp)
             )
         }
     }
@@ -175,15 +187,18 @@ fun AddEvent(viewModel: PurchasesViewModel, purchases: Map<String, Any>, card: M
         }
     }
 
-    Button(onClick = { addEvent() }, modifier = Modifier.fillMaxWidth()) {
+    Button(
+        onClick = { addEvent() },
+        modifier = Modifier.fillMaxWidth(),
+    ) {
         Icon(
             imageVector = Icons.Outlined.Event,
             contentDescription = "Add Event",
             modifier = Modifier.size(15.dp)
         )
-        Text(text = stringResource(id = R.string.add_event), fontSize = 10.sp)
+        Text(text = stringResource(id = R.string.add_event), fontSize = 7.sp)
     }
-    showPermission(
+    ShowPermission(
         viewModel = viewModel,
         purchases = purchases,
         card = card,
@@ -193,7 +208,7 @@ fun AddEvent(viewModel: PurchasesViewModel, purchases: Map<String, Any>, card: M
 }
 
 @Composable
-fun showPermission(
+fun ShowPermission(
     viewModel: PurchasesViewModel,
     purchases: Map<String, Any>,
     card: Map<String, Any>?,

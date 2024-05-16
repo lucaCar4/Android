@@ -210,7 +210,7 @@ fun Menu(viewModel: ProfileViewModel, navController: NavController) {
                     viewModel.changeTheme(theme)
                 })
         }
-        HorizontalDivider()
+        HorizontalDivider(color = MaterialTheme.colorScheme.onBackground)
         DropdownMenuItem(
             text = { Text(stringResource(id = R.string.charts)) },
             leadingIcon = {
@@ -225,7 +225,7 @@ fun Menu(viewModel: ProfileViewModel, navController: NavController) {
 
             }
         )
-        HorizontalDivider()
+        HorizontalDivider(color = MaterialTheme.colorScheme.onBackground)
         DropdownMenuItem(
             text = { Text(text = stringResource(id = R.string.sign_out), color = Color.Red) },
             leadingIcon = {
@@ -239,7 +239,7 @@ fun Menu(viewModel: ProfileViewModel, navController: NavController) {
                 expandMenu = false
                 showExitAppDialog = true
             })
-        HorizontalDivider()
+        HorizontalDivider(color = MaterialTheme.colorScheme.onBackground)
         DropdownMenuItem(
             text = { Text(stringResource(id = R.string.delete_account)) },
             leadingIcon = {

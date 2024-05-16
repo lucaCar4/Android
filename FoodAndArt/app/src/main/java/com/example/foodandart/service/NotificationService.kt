@@ -21,8 +21,7 @@ class NotificationService(private val context : Context) {
 
     fun showWelcomeNotification() {
         val notification = NotificationCompat.Builder(context, "foodandart_channel")
-            .setContentTitle("Welcome!")
-            .setContentText("HI! Welcome to the application")
+            .setContentTitle(context.getString(R.string.welcome))
             .setSmallIcon(R.mipmap.foodandart_round)
             .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
             .setAutoCancel(true)
@@ -32,15 +31,15 @@ class NotificationService(private val context : Context) {
 
     fun showWelcomeBackNotification() {
         val notification = NotificationCompat.Builder(context, "foodandart_channel")
-            .setContentTitle("Welcome Back!")
-            .setContentText("HI! Welcome back")
+            .setContentTitle(context.getString(R.string.welcome_back))
             .setSmallIcon(R.mipmap.foodandart_round)
             .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
             .setAutoCancel(true)
             .build()
         notificationManager.notify(Random.nextInt(), notification)
     }
-    fun showCardUpdateNotification(cardId: String) {
+
+    fun showCardUpdateNotification(cardId: String, name:String) {
         val intent = Intent(context, MyReceiver::class.java).apply {
             putExtra("MESSAGE", "Clicked!")
         }
@@ -63,12 +62,12 @@ class NotificationService(private val context : Context) {
 
         }
         val notification = NotificationCompat.Builder(context, "foodandart_channel")
-            .setContentTitle("New Date")
-            .setContentText("There is a new date in one of your favorite card")
+            .setContentTitle(context.getString(R.string.new_date))
+            .setContentText("${context.getString(R.string.new_date_text)} $name")
             .setSmallIcon(R.mipmap.foodandart_round)
             .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
             .setAutoCancel(true)
-            .addAction(0, "ACTION", pendingIntent)
+            .addAction(0, "", pendingIntent)
             .setContentIntent(clickPendingIntent)
             .build()
         notificationManager.notify(Random.nextInt(), notification)

@@ -11,14 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.foodandart.data.models.Theme
@@ -29,7 +26,7 @@ import com.example.foodandart.ui.MainViewModel
 import com.example.foodandart.ui.composable.NavBar
 import com.example.foodandart.ui.screens.login.sign_up.utils.rememberPermission
 import com.example.foodandart.ui.screens.profile.ProfileViewModel
-import com.example.foodart.ui.theme.FoodArtTheme
+import com.example.foodandart.ui.theme.FoodAndArtTheme
 import org.koin.androidx.compose.koinViewModel
 import org.osmdroid.config.Configuration
 class MainActivity : ComponentActivity() {
@@ -48,7 +45,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val viewModel = koinViewModel<ProfileViewModel>()
             val state = viewModel.state
-            FoodArtTheme(
+            FoodAndArtTheme(
                 darkTheme = when (state) {
                     Theme.Light -> false
                     Theme.Dark -> true

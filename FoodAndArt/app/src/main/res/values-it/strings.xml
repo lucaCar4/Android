@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FoodAndArt</string>
+    <string name="authenticate">Authenticate</string>
+    <!-- Home -->
+        <string name="price">euro a persona</string>
+
+    <!-- Notification -->
+    <string name="welcome">Benvenuto!</string>
+    <string name="welcome_back">Bentornato!</string>
+    <string name="new_date">Nuova data aggiunta!</string>
+    <string name="new_date_text">C\'è una nuova data per</string>
+
+    <!-- Charts -->
+    <string name="charts">Statistiche</string>
+    <string name="voyages">viaggi</string>
+    <string name="bar_description">Viaggi effettuati quest\'anno</string>
+
+
+    <!-- Permission -->
+    <string name="grant">Concedi</string>
+    <string name="dismiss">Nega</string>
+    <string name="go_settings">Impostazioni</string>
+    <!-- Location -->
+    <string name="location_denied">Permesso per l\'accesso alla posizione non concesso</string>
+    <string name="location_denied_body">Il permesso per l\'accesso alla posizione deve essere attivo</string>
+    <string name="location_disable">GPS disabilitato</string>
+    <string name="location_disable_body">Il GPS deve essere attivo</string>
+    <string name="location_perm">È necessario il permesso alla posizione</string>
+    <!-- Camera -->
+    <string name="camera_denied">Permesso per l\'accesso alla fotocamera non concesso</string>
+    <string name="camera_denied_body">Il permesso per l\'accesso alla fotocamera deve essere attivo</string>
+    <string name="camera_perm">È necessario il permesso alla fotocamera</string>
+
+    <!-- Calendar -->
+    <string name="calendar_denied">Permesso per l\'accesso al calendario non concesso</string>
+    <string name="calendar_denied_body">Il permesso per l\'accesso al calendario deve essere attivo</string>
+    <string name="calendar_perm">È necessario il permesso al calendario</string>
+
+    <string name="camera">Eventi</string>
+    <string name="camera_body">Eventi</string>
+    <!-- Purchases -->
+    <string name="events">Eventi</string>
+    <string name="history">Cronologia acquisti</string>
+    <string name="add_event">Aggiungi al calendario</string>
+    <!-- Calendar -->
+    <string name="calendar_description_start">Prenotato per</string>
+    <string name="calendar_description_end">persone</string>
+    <!-- NavBar names -->
+    <string name="home">Home</string>
+    <string name="purchases">Acquisti</string>
+    <string name="favorites">Preferiti</string>
+    <string name="profile">Profilo</string>
+    <string name="basket">Carrello</string>
+
+    <!-- Card Details -->
+    <string name="description">Descrizione</string>
+    <string name="date">Data</string>
+    <string name="add_to_basket">Aggiungi al carrello</string>
+    <string name="show_map">Mostra posizioni</string>
+
+    <!-- Basket -->
+    <string name="title">Carrello</string>
+    <string name="buy">Compra</string>
+
+    <!-- App Theme -->
+    <string name="theme_light">Chiaro</string>
+    <string name="theme_dark">Scuro</string>
+    <string name="theme_system">Sistema</string>
+
+    <!--Filter chips -->
+    <string name="restaurants">Ristoranti</string>
+    <string name="museums">Musei</string>
+    <string name="packages">Pacchetti</string>
+    <string name="position">Posizione</string>
+
+    <!-- Login and Log out -->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="cancel">Cancella</string>
+    <string name="empty_email">L\'email è vuota</string>
+    <string name="empty_password">La password è vuota</string>
+
+    <!-- Sign Up  -->
+    <string name="sign_up">Iscriviti!</string>
+    <string name="emailAlreadyUsed">L\'email inserita è già in uso</string>
+    <string name="confirmPasswordWrong">Le password sono diverse!</string>
+    <string name="passwordTooShort">La password deve avere minimo 6 caratteri</string>
+    <string name="confirm_password">Conferma Password</string>
+    <string name="picture">Scatta una foto</string>
+    <string name="name">Nome</string>
+    <string name="city">Città</string>
+
+    <!-- Sign In -->
+    <string name="sign_in">Accedi</string>
+    <string name="sign_up_description">Non hai un account? Cliica qui per iscriverti!</string>
+    <string name="email_badly_formatted">L\'email è mal formattata</string>
+    <string name="wrong_fields">Password o email sbagliate</string>
+
+    <!-- Sign Out -->
+    <string name="sign_out">Esci</string>
+    <string name="sign_out_title">Vuoi uscire?</string>
+    <string name="sign_out_description">Dovrai riaccedere dinuovo per utilizzare l\'app.</string>
+
+    <!-- Delete Account -->
+    <string name="delete_account">Elimina l\'account</string>
+    <string name="delete_account_title">Vuoi rimuovere l\'account?</string>
+    <string name="delete_account_description">Perderai tutti i tuoi dati. L\'azione è irreversibile.</string>
+
+
+</resources>
