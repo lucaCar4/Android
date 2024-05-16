@@ -15,6 +15,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SelectableChipColors
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
@@ -204,6 +206,6 @@ fun Chip(pair: Map.Entry<String, String>, vm: HomeViewModel) {
         } else {
             null
         },
-        modifier = Modifier.padding(8.dp, 0.dp)
+        modifier = Modifier.padding(8.dp, 0.dp),
     )
 }
