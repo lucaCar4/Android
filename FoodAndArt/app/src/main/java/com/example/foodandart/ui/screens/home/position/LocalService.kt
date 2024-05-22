@@ -52,6 +52,7 @@ class LocationService(private val ctx: Context, viewModel: HomeViewModel) {
             super.onLocationResult(p0)
             coordinates = Coordinates(p0.locations.last().latitude, p0.locations.last().longitude)
             viewModel.geoPoint = GeoPoint(coordinates!!.latitude, coordinates!!.longitude)
+            Log.d("Position", "Settata geopoint${viewModel.geoPoint}")
             endLocationRequest()
         }
     }

@@ -119,4 +119,7 @@ dependencies {
     implementation("org.osmdroid:osmdroid-android:6.1.10")
     implementation("org.osmdroid:osmdroid-mapsforge:6.1.10")
 
+    implementation("androidx.work:work-runtime:2.7.0")
+
+
 }

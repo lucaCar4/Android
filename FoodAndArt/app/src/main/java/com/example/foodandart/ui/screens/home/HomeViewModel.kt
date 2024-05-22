@@ -39,7 +39,7 @@ class HomeViewModel(private val repository: HomeChipsRepository) : ViewModel() {
     var packages by mutableStateOf("false")
     var position by mutableStateOf("false")
 
-    var geoPoint by mutableStateOf(GeoPoint(0.0, 0.0))
+    var geoPoint by mutableStateOf<GeoPoint?>(null)
 
     var cards = getCards()
 
@@ -50,23 +50,10 @@ class HomeViewModel(private val repository: HomeChipsRepository) : ViewModel() {
             restaurants = repository.restaurants.first()
             museums = repository.museums.first()
             packages = repository.packages.first()
-            favoritesChangeListener()
             if (accountService.currentUserId != "") {
                 userDataChangeListener()
-                purchasesChangeListener()
             }
         }
-    }
-
-    private var favoritesJob: Job? = null
-
-    private fun favoritesChangeListener() {
-
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        favoritesJob?.cancel()
     }
 
     fun setChip(value: String, name: String) {
@@ -87,19 +74,26 @@ class HomeViewModel(private val repository: HomeChipsRepository) : ViewModel() {
 
     fun showCardByPosition() : Map<String, Map<String, Any>> {
         val removeList = mutableListOf<String>()
-        cards.forEach { (key, value) ->
-            val targetCoord = value["coordinates"] as? List<GeoPoint>
-            targetCoord?.forEach {
-                val distance = calculateDistance(
-                    geoPoint.latitude, geoPoint.longitude, it.latitude, it.longitude
-                )
-                Log.d("Distance", "Per ${value["title"]}, dist = $distance")
-                if (distance > 30) {
-                    removeList.add(key)
+        Log.d("Position", "Geo $geoPoint")
+        if (geoPoint != null) {
+            Log.d("Position", "Position")
+            cards.forEach { (key, value) ->
+                val targetCoord = value["coordinates"] as? Map<String,GeoPoint>
+                targetCoord?.forEach { (name, point) ->
+                    val distance = calculateDistance(
+                        geoPoint!!.latitude, geoPoint!!.longitude, point.latitude, point.longitude
+                    )
+                    Log.d("Distance", "Per ${value["title"]}, dist = $distance")
+                    if (distance > 30) {
+                        removeList.add(key)
+                    }
                 }
             }
+            return cards.filter { !removeList.contains(it.key) }
+        } else {
+            return emptyMap()
         }
-        return cards.filter { !removeList.contains(it.key) }
+
     }
 
     private fun calculateDistance(

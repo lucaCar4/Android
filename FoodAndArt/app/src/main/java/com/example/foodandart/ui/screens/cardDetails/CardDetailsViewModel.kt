@@ -43,6 +43,8 @@ class CardDetailsViewModel(private val repository: BasketRepository) : ViewModel
 
     private var datesUpdate: Job? = null
 
+    var addedElem by mutableStateOf(false)
+
     val state = repository.basket.map { BasketState(it) }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
@@ -52,6 +54,7 @@ class CardDetailsViewModel(private val repository: BasketRepository) : ViewModel
     val actions = object : BasketActions {
         override fun addElem(elem: BasketElem) = viewModelScope.launch {
             repository.upsert(elem)
+            addedElem = true
         }
 
         override fun removeElem(elem: BasketElem) = viewModelScope.launch {

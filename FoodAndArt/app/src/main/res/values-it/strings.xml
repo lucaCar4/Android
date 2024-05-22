@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">FoodAndArt</string>
     <string name="authenticate">Authenticate</string>
+    <string name="change_password">Cambia Password</string>
+
     <!-- Home -->
         <string name="price">euro a persona</string>
 
@@ -15,6 +17,7 @@
     <string name="charts">Statistiche</string>
     <string name="voyages">viaggi</string>
     <string name="bar_description">Viaggi effettuati quest\'anno</string>
+    <string name="type">Tipi di viaggio</string>
 
 
     <!-- Permission -->
@@ -58,6 +61,8 @@
     <string name="date">Data</string>
     <string name="add_to_basket">Aggiungi al carrello</string>
     <string name="show_map">Mostra posizioni</string>
+    <string name="add_basket">Elemento aggiunto al carrello correttamente</string>
+    <string name="go_to_basket">Vai al carrello</string>
 
     <!-- Basket -->
     <string name="title">Carrello</string>

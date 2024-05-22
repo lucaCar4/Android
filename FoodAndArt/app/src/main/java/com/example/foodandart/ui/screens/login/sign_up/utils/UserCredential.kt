@@ -156,19 +156,4 @@ fun UserExtraData(viewModel: SignUpViewModel) {
         isError =  false,
         supportingText = {},
     )
-    OutlinedTextField(
-        singleLine = true,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp, 4.dp),
-        value = viewModel.city,
-        onValueChange = { viewModel.updateCity(it) },
-        placeholder = { Text(stringResource(R.string.city)) },
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.AddLocation,
-                contentDescription = "Email"
-            )
-        },
-    )
 }

@@ -27,11 +27,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.foodandart.R
 import com.example.foodandart.data.firestore.storage.getURIFromPath
 import com.example.foodandart.ui.FoodAndArtRoute
 import com.example.foodandart.ui.screens.home.showCards
@@ -71,7 +75,7 @@ fun FoodAndArtCard(id: String, data: Map<String, Any>, viewModel: FavoritesViewM
             .fillMaxSize()
             .padding(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
         onClick = { navController.navigate(FoodAndArtRoute.CardDetails.buildRoute(id)) }
 
@@ -80,7 +84,7 @@ fun FoodAndArtCard(id: String, data: Map<String, Any>, viewModel: FavoritesViewM
             modifier = Modifier
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 AsyncImage(
@@ -108,12 +112,23 @@ fun FoodAndArtCard(id: String, data: Map<String, Any>, viewModel: FavoritesViewM
                     Icon(Icons.Outlined.Star, contentDescription = "Favorites", tint = tint)
                 }
             }
-            Spacer(Modifier.size(8.dp))
+            Spacer(modifier = Modifier.padding(8.dp))
             Text(
-                data["title"].toString(),
+                text = data?.get("title").toString(),
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
                 style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Left,
+                modifier = Modifier.padding(8.dp, 0.dp),
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 17.sp
+            )
+            Text(
+                text = "${data?.get("price")} ${stringResource(id = R.string.price)}",
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Left,
+                modifier = Modifier.padding(8.dp),
+                fontSize = 12.sp
             )
         }
     }

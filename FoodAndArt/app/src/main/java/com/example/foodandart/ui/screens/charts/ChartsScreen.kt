@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.model.PlotType
@@ -40,7 +39,6 @@ import co.yml.charts.ui.barchart.models.BarData
 import co.yml.charts.ui.barchart.models.BarStyle
 import co.yml.charts.ui.barchart.models.SelectionHighlightData
 import co.yml.charts.ui.piechart.charts.DonutPieChart
-import co.yml.charts.ui.piechart.charts.PieChart
 import co.yml.charts.ui.piechart.models.PieChartConfig
 import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.foodandart.R
@@ -71,19 +69,24 @@ fun ChartsScreen(navController: NavController) {
                             contentDescription = "Back"
                         )
                     }
-                }
+                },
             )
         }
     ) { contentPadding ->
-        Column(modifier = Modifier
-            .padding(contentPadding)
-            .padding(16.dp, 0.dp)) {
-            Text(text = stringResource(id = R.string.bar_description), fontSize = 30.sp)
-            Box(modifier = Modifier.padding(16.dp)) {
-                BarChartScreen()
-            }
+        Column(
+            modifier = Modifier
+                .padding(contentPadding)
+                .padding(16.dp, 0.dp)
+        ) {
+            Text(text = stringResource(id = R.string.bar_description))
+            BarChartScreen()
             Spacer(modifier = Modifier.padding(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+            Text(text = stringResource(id = R.string.type))
+            Spacer(modifier = Modifier.padding(8.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
                 PurchasesTypeComposition()
                 Spacer(modifier = Modifier.padding(8.dp))
                 ColorLegend()
@@ -105,7 +108,7 @@ fun BarChartScreen() {
             val barData = BarData(
                 point = Point(index.toFloat(), events[index].toFloat() + 0.2f),
                 label = monthName,
-                gradientColorList = listOf(Color.Cyan, Color.White),
+                gradientColorList = listOf(Color(0xFFFA7D09), Color.White),
                 description = "${events[index]} ${stringResource(id = R.string.voyages)}"
             )
             barsData.add(barData)
@@ -145,15 +148,15 @@ fun BarChartScreen() {
         yAxisData = yAxisData,
         barStyle = barStyle,
         horizontalExtraSpace = 30.dp,
-        backgroundColor = MaterialTheme.colorScheme.surface
+        backgroundColor = MaterialTheme.colorScheme.background
     )
 
     BarChart(
         barChartData = barChartData,
         modifier = Modifier
             .height(200.dp)
-            .fillMaxSize()
-        //.padding(16.dp)
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
     )
 }
 
@@ -181,7 +184,7 @@ private fun getMonthsEvents(): MutableList<Int> {
 }
 
 @Composable
-fun PurchasesTypeComposition(){
+fun PurchasesTypeComposition() {
     val counts = getTypesCount()
     val slices = mutableListOf<PieChartData.Slice>()
     counts.forEach { (type, count) ->
@@ -203,25 +206,31 @@ fun PurchasesTypeComposition(){
         activeSliceAlpha = 0.5f,
         isEllipsizeEnabled = true,
         animationDuration = 600,
-        backgroundColor = Color.Transparent,
+        backgroundColor = MaterialTheme.colorScheme.background,
         labelColor = MaterialTheme.colorScheme.onBackground,
         labelVisible = true,
         labelType = PieChartConfig.LabelType.VALUE,
     )
-
-    DonutPieChart(modifier = Modifier.size(200.dp), pieChartData = pieData, pieChartConfig = pieChartConfig)
+    DonutPieChart(
+        modifier = Modifier
+            .size(200.dp)
+            .background(MaterialTheme.colorScheme.background),
+        pieChartData = pieData,
+        pieChartConfig = pieChartConfig
+    )
 }
 
-fun getTypesCount() : MutableMap<String, Int>  {
+fun getTypesCount(): MutableMap<String, Int> {
     val voyages = mutableMapOf<String, Int>()
-    cardTypes.forEach {(type, _) ->
+    cardTypes.forEach { (type, _) ->
         val count = purchases.count { cards[it["card"]]?.get("type").toString() == type }
         voyages[type] = count
     }
     return voyages
 }
+
 @Composable
-fun ColorLegend(){
+fun ColorLegend() {
     Column {
         cardTypes.forEach { (type, color) ->
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -231,9 +240,19 @@ fun ColorLegend(){
                         .background(color)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = type)
+                Text(text = getString(type = type))
             }
             Spacer(modifier = Modifier.height(8.dp))
         }
+    }
+}
+
+@Composable
+fun getString(type: String): String {
+    return when (type) {
+        "Restaurant" -> stringResource(id = R.string.restaurants)
+        "Museum" -> stringResource(id = R.string.museums)
+        "Package" -> stringResource(id = R.string.packages)
+        else -> ""
     }
 }

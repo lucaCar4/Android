@@ -9,6 +9,7 @@ import com.example.foodandart.data.firestore.cloud_database.getCards
 import com.example.foodandart.data.models.BasketActions
 import com.example.foodandart.data.models.BasketState
 import com.example.foodandart.data.repositories.BasketRepository
+import com.example.foodandart.service.dates
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -40,12 +41,12 @@ class BasketViewModel(private val repository: BasketRepository) : ViewModel() {
 
     fun updateLimit(cardId: String) {
         val newLimits = mutableMapOf<String, Int>()
-        (selectedCards[cardId]?.get("dates") as? Map<String, String>)?.forEach { (key, value) ->
-            val values = value.split('/')
-            if (values.size == 2) {
-                val newLimit = values[1].toInt() - values[0].toInt()
-                newLimits[key] = newLimit
-            }
+        dates[cardId]?.documents?.forEach { snapshot ->
+            val data = snapshot.data as? Map<String, Any>
+            val value1 = data?.get("availability").toString().toInt()
+            val value2 =  data?.get("booked").toString().toInt()
+            val newLimit = value1 - value2
+            newLimits[data?.get("date").toString()] = newLimit
         }
         limits[cardId] = newLimits
     }

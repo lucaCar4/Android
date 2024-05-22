@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -51,6 +52,7 @@ var showCards = emptyMap<String, Map<String, Any>>()
 @Composable
 fun Cards(viewModel: HomeViewModel, navController: NavController) {
     filterCards(viewModel)
+    position(viewModel)
     Log.d("Cards", "Entro For")
     LazyColumn(
         modifier = Modifier.padding(16.dp)
@@ -100,8 +102,7 @@ fun FoodAndArtCard(
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier
                             .fillMaxSize()
-                            .height(150.dp)
-                            .width(200.dp)
+                            .size(200.dp)
                     )
                 } else {
                     Image(
@@ -110,8 +111,7 @@ fun FoodAndArtCard(
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier
                             .fillMaxSize()
-                            .height(150.dp)
-                            .width(200.dp)
+                            .size(200.dp)
                     )
                 }
                 var tint by remember { mutableStateOf(Color.LightGray) }
@@ -157,26 +157,32 @@ fun FoodAndArtCard(
     }
 }
 
+fun position(viewModel: HomeViewModel) {
+    if (viewModel.geoPoint != null && viewModel.position.toBoolean()) {
+        showCards = showCards.filter { viewModel.showCardByPosition().contains(it.key) }
+    }
+}
+
 fun filterCards(viewModel: HomeViewModel) {
     Log.d("MainViewModel", viewModel.cards.size.toString())
     var newCards = mutableMapOf<String, Map<String, Any>>()
+    var count = 0
     if (viewModel.restaurants.toBoolean()) {
         newCards.putAll(viewModel.cards.filter { it.value["type"].toString() == "Restaurant" })
+        count += 1
     }
     if (viewModel.museums.toBoolean()) {
         newCards.putAll(viewModel.cards.filter { it.value["type"].toString() == "Museum" })
+        count += 1
     }
     if (viewModel.packages.toBoolean()) {
         newCards.putAll(viewModel.cards.filter { it.value["type"].toString() == "Package" })
+        count += 1
     }
-    if (newCards.isEmpty()) {
+    if (newCards.isEmpty() && count == 0) {
         newCards = viewModel.cards
     }
 
-    if (viewModel.position.toBoolean()) {
-        newCards =
-            newCards.filter { viewModel.showCardByPosition().contains(it.key) }.toMutableMap()
-    }
     showCards = newCards
     Log.d("Cards", "FIne")
 }

@@ -2,7 +2,7 @@
 
     <string name="app_name">FoodAndArt</string>
     <string name="authenticate">Authenticate</string>
-
+    <string name="change_password">Change Password</string>
     <!-- Home -->
         <string name="price">euros per person</string>
 
@@ -16,6 +16,7 @@
         <string name="charts">Stats</string>
         <string name="voyages">voyages</string>
         <string name="bar_description">Trips taken this year</string>
+        <string name="type">Type of voyages</string>
 
 
     <!-- Permission -->
@@ -59,7 +60,8 @@
         <string name="date">Date</string>
         <string name="add_to_basket">Add to Basket</string>
         <string name="show_map">Show Map</string>
-
+        <string name="add_basket">Element added to basket correctly</string>
+        <string name="go_to_basket">Go to basket</string>
     <!-- Basket -->
         <string name="title">Basket</string>
         <string name="buy">Buy</string>

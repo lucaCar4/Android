@@ -32,7 +32,7 @@ class FoodAndArtApplication : Application(){
         /*
         val serviceIntent = Intent(this, BackGroundService::class.java)
         this.startService(serviceIntent)
-         */
+
         val workRequest = PeriodicWorkRequest.Builder(
             DateUpdateWorker::class.java,
             15,
@@ -40,5 +40,7 @@ class FoodAndArtApplication : Application(){
         ).build()
 
         WorkManager.getInstance(this).enqueue(workRequest)
+
+         */
     }
 }

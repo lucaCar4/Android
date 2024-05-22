@@ -13,9 +13,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AddLocation
+import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.PersonRemove
 import androidx.compose.material.icons.outlined.QueryStats
 import androidx.compose.material3.AlertDialog
@@ -62,7 +64,6 @@ var offsetX by mutableStateOf(0.dp)
 var parentWidth by mutableIntStateOf(0)
 
 var showExitAppDialog by mutableStateOf(false)
-var showRemoveAccDialog by mutableStateOf(false)
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,13 +76,13 @@ fun ProfileScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.app_name)) },
+                title = { Text(stringResource(R.string.profile)) },
                 actions = {
                     IconButton(onClick = { expandMenu = true }) {
                         Icon(Icons.Default.MoreVert, "Menu")
                     }
                     Menu(viewModel, navController)
-                }
+                },
             )
         }
     ) { contentPadding ->
@@ -156,13 +157,13 @@ fun UserInformation(viewModel: ProfileViewModel) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp, 4.dp),
-        value = viewModel.city,
+        value = viewModel.mail,
         onValueChange = { },
         readOnly = true,
-        placeholder = { Text(stringResource(R.string.city)) },
+        placeholder = { Text(stringResource(R.string.email)) },
         leadingIcon = {
             Icon(
-                imageVector = Icons.Default.AddLocation,
+                imageVector = Icons.Default.Mail,
                 contentDescription = "Email"
             )
         },
@@ -227,6 +228,19 @@ fun Menu(viewModel: ProfileViewModel, navController: NavController) {
         )
         HorizontalDivider(color = MaterialTheme.colorScheme.onBackground)
         DropdownMenuItem(
+            text = { Text(text = stringResource(id = R.string.change_password)) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Outlined.Key,
+                    contentDescription = "Change Password",
+                )
+            },
+            onClick = {
+                expandMenu = false
+                viewModel.changePassword()
+            })
+        HorizontalDivider(color = MaterialTheme.colorScheme.onBackground)
+        DropdownMenuItem(
             text = { Text(text = stringResource(id = R.string.sign_out), color = Color.Red) },
             leadingIcon = {
                 Icon(
@@ -250,7 +264,7 @@ fun Menu(viewModel: ProfileViewModel, navController: NavController) {
             },
             onClick = {
                 expandMenu = false
-                showRemoveAccDialog = true
+                viewModel.showRemoveAccDialog = true
             })
 
     }
@@ -258,24 +272,36 @@ fun Menu(viewModel: ProfileViewModel, navController: NavController) {
 
 @Composable
 fun DeleteAccountAlert(viewModel: ProfileViewModel) {
-    if (showRemoveAccDialog) {
+    if (viewModel.showRemoveAccDialog) {
         AlertDialog(
             title = { Text(stringResource(R.string.delete_account_title)) },
-            text = { Text(stringResource(R.string.delete_account_description)) },
+            text = {
+                Column {
+                    Text(stringResource(R.string.delete_account_description))
+
+                    OutlinedTextField(
+                        value = viewModel.password,
+                        onValueChange = { viewModel.password = it },
+                        isError = viewModel.showRemoveAccDialog
+                    )
+                }
+
+            },
             dismissButton = {
-                Button(onClick = { showRemoveAccDialog = false }) {
+                Button(onClick = { viewModel.showRemoveAccDialog = false }) {
                     Text(text = stringResource(R.string.cancel))
                 }
             },
             confirmButton = {
                 Button(onClick = {
-                    viewModel.onDeleteAccountClick()
-                    showRemoveAccDialog = false
+                    if (viewModel.password != "") {
+                        viewModel.signIn()
+                    }
                 }) {
                     Text(text = stringResource(R.string.delete_account))
                 }
             },
-            onDismissRequest = { showRemoveAccDialog = false }
+            onDismissRequest = { viewModel.showRemoveAccDialog = false }
         )
     }
 }

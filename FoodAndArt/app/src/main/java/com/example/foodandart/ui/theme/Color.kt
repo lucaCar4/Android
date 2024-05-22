@@ -76,6 +76,9 @@ val surfaceContainerHighestDark = Color(0xFF38352B)
 
 
 val darkLabel = Color(0xFFFA7D09)
+val d = Color(0xFFFF9800)
+val s = Color(0xFFFFEB3B)
+val c = Color(0xFFFFC107)
 
 
 

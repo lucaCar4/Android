@@ -10,6 +10,7 @@ import android.provider.CalendarContract
 import android.provider.Settings
 import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -190,13 +191,14 @@ fun AddEvent(viewModel: PurchasesViewModel, purchases: Map<String, Any>, card: M
     Button(
         onClick = { addEvent() },
         modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(2.dp)
     ) {
         Icon(
             imageVector = Icons.Outlined.Event,
             contentDescription = "Add Event",
             modifier = Modifier.size(15.dp)
         )
-        Text(text = stringResource(id = R.string.add_event), fontSize = 7.sp)
+        Text(text = stringResource(id = R.string.add_event), fontSize = 8.sp)
     }
     ShowPermission(
         viewModel = viewModel,
@@ -269,7 +271,7 @@ fun calendar(
     osmDataSource: OSMDataSource,
     scope: CoroutineScope
 ) {
-    val coordinates = card?.get("coordinates") as? List<GeoPoint>
+    val coordinates = card?.get("coordinates") as? Map<String,GeoPoint>
     if (!coordinates.isNullOrEmpty()) {
         fun openWirelessSettings() {
             val intent = Intent(Settings.ACTION_WIRELESS_SETTINGS).apply {
@@ -292,7 +294,7 @@ fun calendar(
 
         fun getName() = scope.launch {
             if (isOnline()) {
-                val res = osmDataSource.getPalaceName(coordinates.first())
+                val res = osmDataSource.getPalaceName(coordinates.values.first())
                 val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 val date: Date = dateFormat.parse(purchase["date"].toString()) ?: Date()
                 Log.d("Dataaaa", date.toString())

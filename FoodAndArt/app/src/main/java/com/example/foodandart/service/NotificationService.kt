@@ -5,14 +5,24 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import androidx.annotation.DrawableRes
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import androidx.core.net.toUri
+import androidx.navigation.NavController
 import com.example.foodandart.MainActivity
 import com.example.foodandart.R
 import com.example.foodandart.reciver.MyReceiver
+import com.example.foodandart.ui.FoodAndArtRoute
 import kotlin.random.Random
 
 class NotificationService(private val context : Context) {

@@ -1,5 +1,6 @@
 package com.example.foodandart.service
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,11 +53,29 @@ class AccountService {
         }
     }
 
-    suspend fun signOut() {
+    fun signOut() {
         Firebase.auth.signOut()
     }
 
-    suspend fun deleteAccount() {
+    suspend fun deleteAccount(password: String) {
+        Firebase.auth.signInWithEmailAndPassword(Firebase.auth.currentUser?.email.toString(), password).await()
         Firebase.auth.currentUser!!.delete().await()
+    }
+    suspend fun signInDelete(password: String): String {
+        return try {
+            Firebase.auth.signInWithEmailAndPassword(Firebase.auth.currentUser?.email.toString(), password).await()
+            ""
+        } catch (e: Exception) {
+            e.message ?: ""
+        }
+    }
+
+    fun resetPass() {
+        Firebase.auth.sendPasswordResetEmail(Firebase.auth.currentUser?.email.toString())
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "Email sent.")
+                }
+            }
     }
 }

@@ -35,9 +35,10 @@ private var userUpdate: Job? = null
 private var purchasesUpdate: Job? = null
 
 
-fun removeUserFiles() {
+suspend fun removeUserFiles() {
     val db = Firebase.firestore
-    db.collection("users").document(accountService.currentUserId).delete()
+    val userId = accountService.currentUserId
+    db.collection("users").document(userId).delete().await()
 }
 
 fun addUserDocument(name: String, cityGeoPoint: GeoPoint, city: String) {
@@ -153,26 +154,12 @@ fun cardsUpdate() {
                 val docId = document.id
                 Log.d("MainViewModel", "dcccc")
                 document.reference.addSnapshotListener { docSnapshot, docError ->
-                    if (docSnapshot != null && docSnapshot.exists()) {
+                    if (docSnapshot != null && docSnapshot.exists()  && docSnapshot.data?.get("special").toString() != "true" ){
                         cards[docId] = docSnapshot.data as Map<String, Any>
                     }
                 }
             }
         }
-        /*
-        cards.forEach {card ->
-            docRef.document(card.key).collection("dates").addSnapshotListener { snapshot, _ ->
-                snapshot?.documents?.forEach { document ->
-                    val docId = document.id
-                    document.reference.addSnapshotListener { docSnapshot, _ ->
-                        if (docSnapshot != null && docSnapshot.exists()) {
-                            dates[card.key] = docSnapshot.data as Map<String, Any>
-                        }
-                    }
-                }
-            }
-        }
-         */
     }
 }
 

@@ -18,10 +18,7 @@ fun NavBar(
     navController: NavController,
     currentRoute: FoodAndArtRoute
 ) {
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surface,
-
-        ) {
+    NavigationBar( containerColor = MaterialTheme.colorScheme.surface) {
         FoodAndArtRoute.mainRoutes.forEach { item ->
             NavigationBarItem(
                 icon = {

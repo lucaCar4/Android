@@ -29,9 +29,15 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -50,37 +56,43 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.foodandart.R
 import com.example.foodandart.data.database.BasketElem
-import com.example.foodandart.data.firestore.cloud_database.getCards
 import com.example.foodandart.data.firestore.storage.getURIFromPath
 import com.example.foodandart.data.models.BasketState
+import com.example.foodandart.ui.FoodAndArtRoute
 import com.example.foodandart.ui.screens.cardDetails.map.Map
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
+import com.example.foodandart.ui.screens.login.sign_up.utils.imageUri
+
+
+val snackbarHostState = SnackbarHostState()
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardDetailsScreen(navController: NavController, id: String, viewModel: CardDetailsViewModel) {
     val ctx = LocalContext.current
+    ShowNotification(viewModel = viewModel, navController = navController)
     viewModel.setDocument(id)
-
+    val imagesPath = viewModel.document?.get("images") as? List<String>
+    val firstUri = imagesPath?.let { getURIFromPath(path = it.first()) }
     if (viewModel.document != null) {
         Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
             floatingActionButton = {
                 FloatingActionButton(
                     containerColor = MaterialTheme.colorScheme.primary,
                     onClick = {
-                        val sendIntent: Intent = Intent().apply {
-                            action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_TEXT, "Thia is my travel: $id")
+                        val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            putExtra(Intent.EXTRA_TEXT, "https://foodandart-d0115.web.app/card/$id")
                             type = "text/plain"
                         }
-                        ctx.startActivity(sendIntent)
+                        ctx.startActivity(Intent.createChooser(sendIntent, "Condividi il link tramite:"))
                     }) {
                     Icon(Icons.Outlined.Share, "Share Trip")
                 }
@@ -92,7 +104,7 @@ fun CardDetailsScreen(navController: NavController, id: String, viewModel: CardD
                             text = viewModel.document?.get("title").toString(),
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth(),
-                            )
+                        )
                     },
                     navigationIcon = {
                         Icon(
@@ -111,7 +123,6 @@ fun CardDetailsScreen(navController: NavController, id: String, viewModel: CardD
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val imagesPath = viewModel.document?.get("images") as? List<String>
                 if (imagesPath != null) {
                     LazyRow {
                         items(imagesPath) {
@@ -219,11 +230,17 @@ fun BuyCard(viewModel: CardDetailsViewModel) {
                     viewModel.quantity--
                 }
             },
+            colors = IconButtonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                disabledContainerColor = IconButtonDefaults.iconButtonColors().disabledContainerColor,
+                disabledContentColor = IconButtonDefaults.iconButtonColors().disabledContentColor,
+                contentColor = IconButtonDefaults.iconButtonColors().containerColor
+            )
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                 contentDescription = "Arrow Back",
-                modifier = Modifier.border(1.dp, Color.Black, CircleShape)
+                tint = Color.Black
             )
         }
         Spacer(modifier = Modifier.padding(6.dp))
@@ -235,12 +252,18 @@ fun BuyCard(viewModel: CardDetailsViewModel) {
                     viewModel.quantity++
                 }
             },
-            modifier = Modifier.clip(CircleShape)
+            modifier = Modifier.clip(CircleShape),
+            colors = IconButtonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                disabledContainerColor = IconButtonDefaults.iconButtonColors().disabledContainerColor,
+                disabledContentColor = IconButtonDefaults.iconButtonColors().disabledContentColor,
+                contentColor = IconButtonDefaults.iconButtonColors().containerColor
+            )
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
                 contentDescription = "Arrow Forward",
-                modifier = Modifier.border(1.dp, Color.Black, CircleShape)
+                tint = Color.Black
             )
         }
         Spacer(modifier = Modifier.padding(6.dp))
@@ -249,32 +272,52 @@ fun BuyCard(viewModel: CardDetailsViewModel) {
                 checkExistingCard(viewModel = viewModel, state = state)
                 viewModel.actions.addElem(
                     BasketElem(
-                        card =  viewModel.id,
+                        card = viewModel.id,
                         date = viewModel.selectedDate,
                         quantity = viewModel.quantity
                     )
                 )
-
             }
         }, enabled = viewModel.quantity > 0) {
             Text(text = stringResource(id = R.string.add_to_basket))
         }
         Spacer(modifier = Modifier.padding(6.dp))
-        Text(text = state.basket.size.toString())
+        Text(
+            text = (viewModel.document?.get("price").toString()
+                .toInt() * viewModel.quantity).toString()
+        )
     }
 }
 
 private fun checkExistingCard(state: BasketState, viewModel: CardDetailsViewModel) {
     val elems = mutableListOf<BasketElem>()
-    state.basket.forEach {elem ->
+    state.basket.forEach { elem ->
         if (viewModel.document != null) {
-            if (elem.card == viewModel.id && viewModel.selectedDate == elem.date )  {
+            if (elem.card == viewModel.id && viewModel.selectedDate == elem.date) {
                 elems.add(elem)
             }
         }
     }
     elems.forEach {
         viewModel.actions.removeElem(it)
+    }
+}
+
+@Composable
+fun ShowNotification(viewModel: CardDetailsViewModel, navController: NavController) {
+    if (viewModel.addedElem) {
+        val ctx = LocalContext.current
+        LaunchedEffect(snackbarHostState) {
+            val res = snackbarHostState.showSnackbar(
+                ctx.getString(R.string.add_basket),
+                ctx.getString(R.string.go_to_basket),
+                duration = SnackbarDuration.Long
+            )
+            if (res == SnackbarResult.ActionPerformed) {
+                navController.navigate(FoodAndArtRoute.Basket.route)
+                viewModel.addedElem = false
+            }
+        }
     }
 }
 

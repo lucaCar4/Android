@@ -54,3 +54,10 @@ suspend fun getUserImage(): Uri? {
     }
     return uriRef
 }
+
+suspend fun removeUser() {
+    val storage = Firebase.storage
+    val storageRef = storage.reference
+    storageRef.child("${accountService.currentUserId}/profile_image.jpg").delete().await()
+}
+

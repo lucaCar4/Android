@@ -65,7 +65,6 @@ fun FilterChips(
             PermissionStatus.Granted -> {
                 locationService.requestCurrentLocation()
                 viewModel.setChip((!positionState).toString(), "position")
-                viewModel.showCardByPosition()
             }
             PermissionStatus.Denied -> showPermissionDeniedAlert = true
             PermissionStatus.PermanentlyDenied -> showPermissionPermanentlyDeniedSnackBar = true
@@ -75,16 +74,11 @@ fun FilterChips(
     fun requestLocation() {
         if (locationPermission.status.isGranted) {
             locationService.requestCurrentLocation()
-            viewModel.showCardByPosition()
         } else {
             locationPermission.launchPermissionRequest()
         }
     }
 
-    if (viewModel.geoPoint.latitude != 0.0 && positionState) {
-        Log.d("Cards", "Chiamo pos")
-        viewModel.showCardByPosition()
-    }
     LazyRow(
         modifier = Modifier
             .padding(contentPadding)
